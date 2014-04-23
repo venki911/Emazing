@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>GA Custom Data Upload <small>from Facebook</small></h1>
+
+    <style type="text/css">
+      .row {
+        padding: 0 5%;
+        margin:0 auto;
+      }
+
+      h4 {
+        margin:50px 0 10px;
+      }
+
+      button.btn {
+        margin:35px 0 40px;
+      }
+
+      .col-sm-5 {
+        display: block;
+        float: none;
+        padding: 0;
+      }
+
+      .panel {
+        margin: 0 0 60px;
+      }
+    </style>
+
+    <%= form_for @daily_report do |f| -%>
+      <h4>Upload Report</h4>
+      <div class="form-group">
+        <label for="csv">CSV File *</label>
+        <%= f.file_field :body, class: 'form-control', required: true %>
+        <p class="help-block">Report exported from FB Ads Reports. Exceptable reports "Daily Custom Data Report for GA" for one day only.</p>
+      </div>
+      <div class="form-group col-sm-5">
+        <label for="date">Report Date *</label>
+        <%= f.text_field :created_at, class: 'form-control', required: true, value: Date.yesterday %>
+        <p class="help-block">Defaults to yesterday. Required date format: 2014-02-23</p>
+      </div>
+      <button type="submit" class="btn btn-default">Upload</button>
+    <% end -%>
+  </div>
+</div>

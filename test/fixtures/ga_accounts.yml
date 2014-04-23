@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account_id: MyString
+  custom_data_source_id: MyString
+  web_property_id: MyString
+  view_id: MyString
+
+two:
+  account_id: MyString
+  custom_data_source_id: MyString
+  web_property_id: MyString
+  view_id: MyString

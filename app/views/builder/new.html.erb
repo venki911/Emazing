@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>URL Builder <small>for Facebook</small></h1>
+
+    <style type="text/css">
+      .row {
+        padding: 0 5%;
+        margin:0 auto;
+      }
+
+      h4 {
+        margin:50px 0 10px;
+      }
+
+      button.btn {
+        margin:35px 0 40px;
+      }
+
+      .col-sm-5 {
+        display: block;
+        float: none;
+        padding: 0;
+      }
+
+      .panel {
+        margin: 0 0 60px;
+      }
+    </style>
+
+    <form role="form" id="builder_new" action="#">
+      <h4><small>Step 1:</small> Enter the URL of your website.</h4>
+      <div class="form-group">
+        <label for="website_url">Website URL *</label>
+        <input type="text" class="form-control" id="website_url" name="website_url" value="<%= params[:website_url] %>" required>
+        <p class="help-block">(e.g. http://www.urchin.com/download.html)</p>
+      </div>
+      <h4><small>Step 2:</small> Fill in the fields below. <strong>Campaign Source, Medium, Content and Name</strong> should always be used.</h4>
+      <div class="form-group col-sm-5">
+        <label for="source">Campaign Source *</label>
+        <input type="text" class="form-control" id="utm_source" name="utm_source" value="<%= params[:utm_source] %>" required>
+        <p class="help-block">(referrer: google, citysearch, newsletter4)</p>
+      </div>
+      <div class="form-group col-sm-5">
+        <label for="medium">Campaign Medium *</label>
+        <input type="text" class="form-control" id="utm_medium" name="utm_medium" value="<%= params[:utm_medium] %>" required>
+        <p class="help-block">(marketing medium: cpc, banner, email)</p>
+      </div>
+      <div class="form-group col-sm-5">
+        <label for="term">Campaign Term</label>
+        <input type="text" class="form-control" id="utm_term" name="utm_term" value="<%= params[:utm_term] %>">
+        <p class="help-block">(identify the paid keywords)</p>
+      </div>
+      <div class="form-group col-sm-5">
+        <label for="content">Campaign Content *</label>
+        <input type="text" class="form-control" id="utm_content" name="utm_content" value="<%= params[:utm_content] %>" required>
+        <p class="help-block">(use to differentiate ads)</p>
+      </div>
+      <div class="form-group col-sm-5">
+        <label for="campaign">Campaign Name *</label>
+        <input type="text" class="form-control" id="utm_campaign" name="utm_campaign" value="<%= params[:utm_campaign] %>" required>
+        <p class="help-block">(product, promo code, or slogan)</p>
+      </div>
+      <button type="submit" class="btn btn-default">Generete URL, Campaign and Ad Name</button>
+    </form>
+
+    <div class="panel panel-success">
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="content">URL</label>
+          <input type="text" class="form-control" id="campaign_url" name="campaign_url" value="" disabled>
+        </div>
+        <div class="form-group">
+          <label for="content">Campaign Name</label>
+          <input type="text" class="form-control" id="campaign_name" name="campaign_name" value="" disabled>
+        </div>
+        <div class="form-group">
+          <label for="content">Ad Name</label>
+          <input type="text" class="form-control" id="ad_name" name="ad_name" value="" disabled>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

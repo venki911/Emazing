@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "/fb-url-builder" => "builder#new"
+  resources :daily_reports, only: [:create, :new]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
