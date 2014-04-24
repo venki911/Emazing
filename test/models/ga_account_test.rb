@@ -4,7 +4,7 @@ class GaAccountTest < ActiveSupport::TestCase
   test "preveri ali deluje povezava z google analytics" do
   	@client = Google::APIClient.new(application_name: 'Emazing orodje',application_version: '1.0.0')
 
-		key = Google::APIClient::KeyUtils.load_from_pkcs12('/Users/tomazzlender/Code/emazing/65124e262941ef45c4f06a9f1189b9fc5db89a69-privatekey.p12', 'notasecret')
+		key = Google::APIClient::KeyUtils.load_from_pkcs12(Rails.application.secrets.google_account_certificate_path, 'notasecret')
 		@client.authorization = Signet::OAuth2::Client.new(
 		  :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
 		  :scope => 'https://www.googleapis.com/auth/analytics',
