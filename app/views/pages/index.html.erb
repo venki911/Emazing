@@ -1,0 +1,35 @@
+<style type="text/css">
+  .row {
+    padding: 0 5%;
+    margin:0 auto;
+  }
+
+  h1 {
+    margin:30px 0 10px;
+  }
+
+  button.btn {
+    margin:35px 0 40px;
+  }
+
+  .col-sm-5 {
+    display: block;
+    float: none;
+    padding: 0;
+  }
+
+  .panel {
+    margin: 0 0 60px;
+  }
+</style>
+
+<div class="row">
+  <div class="col-md-12">
+		<h1>Today is a good day for Advertising :)</h1>
+		<p>Let's...</p>
+		<ul>
+			<li><%= link_to "Generate URLs with UTM tags adapted for Facebook Ads", fb_url_builder_path %></li>
+			<li><%= link_to "Upload Daily Report from Facebook to SMANIA Google Analytics", new_daily_report_path %></li>
+		</ul>
+	</div>
+</div>
