@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/net-ssh/net-ssh
+  revision: 329485ab81f3b69697ac1723043369c37a99ea2f
+  specs:
+    net-ssh (2.8.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -107,7 +113,6 @@ GEM
     multipart-post (2.0.0)
     net-scp (1.2.0)
       net-ssh (>= 2.6.5)
-    net-ssh (2.8.0)
     pg (0.17.1)
     polyglot (0.3.4)
     rack (1.5.2)
@@ -199,6 +204,7 @@ DEPENDENCIES
   google-api-client
   jbuilder (~> 2.0)
   jquery-rails
+  net-ssh (~> 2.8.1)!
   pg
   rails (= 4.1.0)
   sass-rails (~> 4.0.3)
