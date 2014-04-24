@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/net-ssh/net-ssh
+  remote: https://github.com/tomazzlender/net-ssh
   revision: 329485ab81f3b69697ac1723043369c37a99ea2f
   specs:
     net-ssh (2.8.1)
@@ -204,7 +204,7 @@ DEPENDENCIES
   google-api-client
   jbuilder (~> 2.0)
   jquery-rails
-  net-ssh (~> 2.8.1)!
+  net-ssh!
   pg
   rails (= 4.1.0)
   sass-rails (~> 4.0.3)

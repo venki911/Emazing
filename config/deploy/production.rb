@@ -25,21 +25,21 @@ server '178.32.143.131', user: 'deployer', roles: %w{web app db}
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+ set :ssh_options, {
+   keys: %w(/Users/tomazzlender/.ssh/id_rsa_emazing),
+   forward_agent: false,
+   auth_methods: %w(publickey password)
+ }
 #
 # And/or per server (overrides global)
 # ------------------------------------
-# server 'example.com',
-#   user: 'user_name',
-#   roles: %w{web app},
+# server '178.32.143.131',
+#   user: 'deployer',
+#   roles: %w{web app db},
 #   ssh_options: {
-#     user: 'user_name', # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
+#     user: 'deployer', # overrides user setting above
+#     keys: %w(/Users/tomazzlender/.ssh/id_rsa_emazing),
 #     forward_agent: false,
-#     auth_methods: %w(publickey password)
-#     # password: 'please use keys'
+#     auth_methods: %w(publickey password),
+#     password: ''
 #   }

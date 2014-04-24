@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'net-ssh', '~> 2.8.1', :git => "https://github.com/net-ssh/net-ssh"
+gem 'net-ssh', :git => "https://github.com/tomazzlender/net-ssh"
 gem 'rails', '4.1.0'
 gem 'pg'
 gem 'sass-rails', '~> 4.0.3'
