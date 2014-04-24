@@ -15,4 +15,4 @@
 /log/*.log
 /tmp
 
-/vendor/certificates/*.p12
+/config/certificates/*.p12
