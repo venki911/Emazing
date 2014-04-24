@@ -10,12 +10,12 @@ module DataUpload
     def self.upload!(data)
       @client = Google::APIClient.new(application_name: 'Emazing orodje',application_version: '1.0.0')
 
-      key = Google::APIClient::KeyUtils.load_from_pkcs12('/Users/tomazzlender/Code/emazing/65124e262941ef45c4f06a9f1189b9fc5db89a69-privatekey.p12', 'notasecret')
+      key = Google::APIClient::KeyUtils.load_from_pkcs12('/Users/tomazzlender/Code/emazing/7f96e81872cf9a5b1ce597d542f6fa1688063f77-privatekey.p12', 'notasecret')
       @client.authorization = Signet::OAuth2::Client.new(
         :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
         :scope => 'https://www.googleapis.com/auth/analytics',
         :audience => 'https://accounts.google.com/o/oauth2/token',
-        :issuer => '188678993551@developer.gserviceaccount.com',
+        :issuer => '649902570085@developer.gserviceaccount.com',
         :signing_key => key)
 
       @client.authorization.fetch_access_token!

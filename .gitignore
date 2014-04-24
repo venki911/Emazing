@@ -15,4 +15,4 @@
 /log/*.log
 /tmp
 
-65124e262941ef45c4f06a9f1189b9fc5db89a69-privatekey.p12
+/vendor/certificates/*.p12
