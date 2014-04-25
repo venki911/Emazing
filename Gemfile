@@ -8,6 +8,7 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'google-api-client'
+gem 'axlsx_rails'
 # gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
@@ -25,6 +26,7 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem 'spring'
+  gem	'quiet_assets'
 end
 
 # Use ActiveModel has_secure_password
