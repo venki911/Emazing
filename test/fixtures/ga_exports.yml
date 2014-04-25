@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  profile_id: MyString
+  start_date: 2014-04-25
+  end_date: 2014-04-25
+  ga_data: 
+  kind: MyString
+
+two:
+  profile_id: MyString
+  start_date: 2014-04-25
+  end_date: 2014-04-25
+  ga_data: 
+  kind: MyString

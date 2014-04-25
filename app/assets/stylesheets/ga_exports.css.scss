@@ -1,0 +1,24 @@
+.ga_exports_index {
+	h1 {
+		padding-left: 40px;
+	}
+
+	.table {
+		td, th {
+			font-size: 13px;
+		}
+
+		tr td:first-child, tr th:first-child {
+			padding-left: 40px;
+		}
+
+		tr td:last-child, tr th:last-child {
+			padding-right: 0;
+		}
+	}
+
+	.actions {
+		padding: 10px 40px;
+		color: #888;
+	}
+}

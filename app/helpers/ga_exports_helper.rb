@@ -1,0 +1,2 @@
+module GaExportsHelper
+end

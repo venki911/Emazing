@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140423173153) do
+ActiveRecord::Schema.define(version: 20140425205918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "daily_reports", force: true do |t|
     t.date "created_at"
@@ -26,6 +27,16 @@ ActiveRecord::Schema.define(version: 20140423173153) do
     t.string   "custom_data_source_id"
     t.string   "web_property_id"
     t.string   "view_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ga_exports", force: true do |t|
+    t.string   "profile_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.hstore   "ga_data"
+    t.string   "kind"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

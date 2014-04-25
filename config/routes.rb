@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :ga_exports
+
   root "pages#index"
   get "/fb-url-builder" => "builder#new", as: :fb_url_builder
   resources :daily_reports, only: [:create, :new]

@@ -1,0 +1,7 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Poročilo SMANIA") do |sheet|
+	sheet.add_row @export_data[:column_headers].map { |column_header| column_header.gsub('ga:', '').titlecase }
+	@export_data[:rows].each do |row|
+		sheet.add_row row
+	end
+end
