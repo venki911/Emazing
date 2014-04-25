@@ -7,7 +7,7 @@ class DailyReportsController < ApplicationController
 
   def create
     @daily_report = DailyReport.new
-    @daily_report.body = params[:daily_report][:body].read.force_encoding("UTF-8").gsub!("\xEF\xBB\xBF".force_encoding("UTF-8"), '')
+    @daily_report.body = File.read(params[:daily_report][:body].tempfile).force_encoding("UTF-8")
     @daily_report.created_at = params[:daily_report][:created_at]
 
     if @daily_report.save

@@ -28,7 +28,7 @@
       }
     </style>
 
-    <%= form_for @daily_report do |f| -%>
+    <%= form_for @daily_report, multipart: true do |f| -%>
       <h4>Upload Report</h4>
       <div class="form-group">
         <label for="csv">CSV File *</label>

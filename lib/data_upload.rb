@@ -2,12 +2,12 @@ require "google/api_client"
 require "csv"
 
 module DataUpload
-  ga_account = GaAccount.first
-  @smania_params = {account_id: ga_account.account_id, customDataSourceId: ga_account.custom_data_source_id, webPropertyId: ga_account.web_property_id, viewId: ga_account.view_id}
-  @google_account = GoogleAccount.first
 
   class Daily
     def self.upload!(data)
+      ga_account = GaAccount.first
+      @smania_params = {account_id: ga_account.account_id, customDataSourceId: ga_account.custom_data_source_id, webPropertyId: ga_account.web_property_id, viewId: ga_account.view_id}
+
       @client = Google::APIClient.new(application_name: 'Emazing orodje',application_version: '1.0.0')
 
       key = Google::APIClient::KeyUtils.load_from_pkcs12(Rails.application.secrets.google_account_certificate_path, 'notasecret')
@@ -32,9 +32,9 @@ module DataUpload
         date = row.first
         account, medium, campaign = row[2].split('|').map(&:strip)
 
-        output = ['fb bsmart', medium, campaign, row[6], row[3], row[5], row[4]]
+        output = ['facebook', medium, campaign, row[6], row[3], row[5], row[4]]
         case account.mb_chars.downcase.to_s
-        when 'smania' then sm_rows << output
+        when 'smania' then smania_rows << output
         end
       end
 
@@ -42,14 +42,14 @@ module DataUpload
 
       smania_csv = CSV.generate do |csv|
         csv << headers
-        fs_rows.each do |row|
+        smania_rows.each do |row|
           csv << row
         end
       end
       smania_csv = StringIO.new(smania_csv)
 
       method = @analytics.management.daily_uploads.upload
-      media = Google::APIClient::UploadIO.new(sm_csv, 'text/csv')
+      media = Google::APIClient::UploadIO.new(smania_csv, 'text/csv')
       params = {
         'uploadType' => 'media',
         'accountId' => @smania_params[:account_id],
@@ -63,33 +63,6 @@ module DataUpload
 
       results = @client.execute(api_method: method, parameters: params, headers: {'Content-Length' => media.length.to_s, 'Content-Type' => 'application/octet-stream'}, body: media)
       puts JSON.parse(results.body)
-    end
-
-    def generate_csv(rows, headers)
-      csv = CSV.generate do |csv|
-        csv << headers
-        rows.each do |row|
-          csv << row
-        end
-      end
-      StringIO.new(csv)
-    end
-
-    def upload_to_analytics(account, date, io)
-      method = @analytics.management.daily_uploads.upload
-      media = Google::APIClient::UploadIO.new(io, 'text/csv')
-      params = {
-        'uploadType' => 'media',
-        'accountId' => account[:account_id],
-        "appendNumber" => 1,
-        "customDataSourceId" => account[:customDataSourceId],
-        "date" => date,
-        "type" => 'cost',
-        "webPropertyId" => account[:webPropertyId],
-        "reset" => true
-      }
-
-      results = @client.execute(api_method: method, parameters: params, headers: {'Content-Length' => media.length.to_s, 'Content-Type' => 'application/octet-stream'}, body: media)
     end
   end
 end
