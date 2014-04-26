@@ -1,17 +1,21 @@
 <div class="row">
   <div class="col-md-12">
-  	<p style="margin-top:30px;"><%= link_to "<< Go home", root_path %></p>
+  	<p style="margin-top:30px;"><%= link_to "<< Na prvo stran", root_path %></p>
 		<h1>Poročila iz Facebook-a</h1>
-		<p>Seznam iz Facebook-a prenešenih CSV poročil o stroških oglaševanja za račun <strong>SMANIA</strong>. Poročila se samodejno prenesejo vsak dan okoli 3 ure ponoči.</p>
+		<p>Seznam iz Facebook-a prenešenih CSV poročil o stroških oglaševanja za račun <strong>SMANIA</strong>. Poročila se samodejno izvozijo vsak dan okoli 2 ure ponoči.</p>
 		
 		<% @csv_reports.each do |csv_report| %>
 		<h3>
 			Poročilo za dan <%= csv_report.recorded_at %>
-			<small>Stroški so bili v Google Analytics račun uvoženi 2014-04-26. <%= link_to "Ponovno uvozi", "#", class: "btn btn-danger btn-sm", style: "float:right;position:relative;top:-5px;" %></small>
+			<small>Stroški so bili v Google Analytics račun uvoženi 2014-04-26. <%= link_to "Ponovno uvozi stroške v GA", "#", class: "btn btn-danger btn-sm", style: "float:right;position:relative;top:-5px;" %></small>
 		</h3>
 		<div class="well">
 			<%= simple_format(csv_report.source) %>
 		</div>
+		<% end -%>
+
+		<% if @csv_reports.empty? %>
+			<h3><small>Nobeno poročilo še ni bilo izvoženo.</small></h3>
 		<% end -%>
   </div>
 </div>
