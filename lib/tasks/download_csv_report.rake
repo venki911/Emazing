@@ -22,4 +22,14 @@ namespace :fb do
 
 		puts "Finished."
 	end
+
+	desc "Saves CSV report to db"
+	task :save_csv => [:environment] do
+		csv_report = CsvReport.new
+		csv_report.source = File.read(Rails.root.join('tmp', 'cache', 'fb_csvs', 'smania_20140426150214.csv'))
+		csv_report.recorded_at = '2014-04-25'
+		csv_report.facebook_ads_account_id = Rails.application.secrets.facebook_ads_account_id
+		csv_report.save
+		puts csv_report.inspect
+	end
 end
