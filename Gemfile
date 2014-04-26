@@ -9,6 +9,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'google-api-client'
 gem 'axlsx_rails'
+gem 'whenever', :require => false
 # gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
