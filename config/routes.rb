@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :csv_reports, only: [:index]
+
   resources :ga_exports
 
   root "pages#index"
