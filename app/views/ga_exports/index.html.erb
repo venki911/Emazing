@@ -1,11 +1,11 @@
-<p style="margin:30px 40px 0;"><%= link_to "<< Go home", root_path %></p>
+<p style="margin:30px 40px 0;"><%= link_to "<< Na prvo stran", root_path %></p>
 
 <h1>
-  Ads Report
-  <%= link_to "Export to Excel", ga_exports_path(format: :xlsx), class: "btn btn-primary btn-sm" %>
+  Poročilo oglaševanja
+  <%= link_to "Izvozi v Excel", ga_exports_path(format: :xlsx), class: "btn btn-primary btn-sm" %>
 </h1>
 
-<p class="actions">Report about advertising campaigns for account <strong>SMANIA</strong> from <strong><%= @start_date %></strong> to <strong><%= @end_date %></strong>.</p>
+<p class="actions">Poročilo o oglešavalskih kampanjah za Google Analytics račun <strong>SMANIA</strong> od <strong><%= @start_date %></strong> do <strong><%= @end_date %></strong>.</p>
 
 <table class="table table-striped table-condensed">
   <thead>
