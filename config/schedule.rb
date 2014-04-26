@@ -17,8 +17,12 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
-every :day, at: "2 am" do
-	rake "fb:download_csv"
+# every :day, at: "2 am" do
+# 	rake "fb:download_csv"
+# end
+
+every 1.minute do
+	command "mkdir /home/deployer/#{Date.current}"
 end
 
 # Learn more: http://github.com/javan/whenever
