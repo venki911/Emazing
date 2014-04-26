@@ -16,3 +16,4 @@
 /tmp
 
 /config/certificates/*.p12
+/config/secrets.yml
