@@ -20,10 +20,10 @@ class GaAccountTest < ActiveSupport::TestCase
 
     startDate = DateTime.now.prev_month.strftime("%Y-%m-%d")
     endDate = DateTime.now.strftime("%Y-%m-%d")
-    profileID = '72057961' # 72057961: smania
+    profileID = '69872256' # 69872256: medex
 
     results = @client.execute(api_method: @analytics.data.ga.get, :parameters => {
-      'ids' => "ga:72057961",
+      'ids' => "ga:69872256",
       'start-date' => "2014-04-24",
       'end-date' => "2014-04-24",
       'dimensions' => "ga:source,ga:campaign,ga:medium,ga:adContent",
@@ -56,12 +56,12 @@ class GaAccountTest < ActiveSupport::TestCase
 
     method = @analytics.management.daily_uploads.list
     params = {
-      'accountId' => @smania_params[:account_id],
-      "customDataSourceId" => @smania_params[:customDataSourceId],
+      'accountId' => @medex_params[:account_id],
+      "customDataSourceId" => @medex_params[:customDataSourceId],
       "end-date" => "2014-04-24",
       "start-date" => "2014-04-20",
       "type" => 'cost',
-      "webPropertyId" => @smania_params[:webPropertyId]
+      "webPropertyId" => @medex_params[:webPropertyId]
     }
     results = @client.execute(api_method: method, parameters: params)
     puts JSON.parse(results.body)
@@ -84,11 +84,11 @@ class GaAccountTest < ActiveSupport::TestCase
     
     method = @analytics.management.daily_uploads.delete
     params = {
-      'accountId' => @smania_params[:account_id],
-      "customDataSourceId" => @smania_params[:customDataSourceId],
+      'accountId' => @medex_params[:account_id],
+      "customDataSourceId" => @medex_params[:customDataSourceId],
       "date" => "2014-04-24",
       "type" => 'cost',
-      "webPropertyId" => @smania_params[:webPropertyId]
+      "webPropertyId" => @medex_params[:webPropertyId]
     }
     results = @client.execute(api_method: method, parameters: params)
     puts JSON.parse(results.body)

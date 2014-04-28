@@ -5,7 +5,7 @@ namespace :fb do
 
 		username = Rails.application.secrets.facebook_username
 		password = Rails.application.secrets.facebook_password
-		temp_csv_path = Rails.root.join('tmp', 'cache', 'fb_csvs', "smania_#{Time.now.strftime('%Y%m%d%H%M%S')}.csv")
+		temp_csv_path = Rails.root.join('tmp', 'cache', 'fb_csvs', "medex_#{Time.now.strftime('%Y%m%d%H%M%S')}.csv")
 		facebook_ads_account_id = Rails.application.secrets.facebook_ads_account_id
 		script = Rails.root.join('lib', 'tasks', 'download_csv_report.js')
 
@@ -26,7 +26,7 @@ namespace :fb do
 	desc "Saves CSV report to db"
 	task :save_csv => [:environment] do
 		csv_report = CsvReport.new
-		csv_report.source = File.read(Rails.root.join('tmp', 'cache', 'fb_csvs', 'smania_20140426150214.csv'))
+		csv_report.source = File.read(Rails.root.join('tmp', 'cache', 'fb_csvs', 'medex_20140426150214.csv'))
 		csv_report.recorded_at = '2014-04-25'
 		csv_report.facebook_ads_account_id = Rails.application.secrets.facebook_ads_account_id
 		csv_report.save

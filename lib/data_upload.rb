@@ -6,7 +6,7 @@ module DataUpload
   class Daily
     def self.upload!(data)
       ga_account = GaAccount.first
-      @smania_params = {account_id: ga_account.account_id, customDataSourceId: ga_account.custom_data_source_id, webPropertyId: ga_account.web_property_id, viewId: ga_account.view_id}
+      @medex_params = {account_id: ga_account.account_id, customDataSourceId: ga_account.custom_data_source_id, webPropertyId: ga_account.web_property_id, viewId: ga_account.view_id}
 
       @client = Google::APIClient.new(application_name: 'Emazing orodje',application_version: '1.0.0')
 
@@ -52,12 +52,12 @@ module DataUpload
       media = Google::APIClient::UploadIO.new(smania_csv, 'text/csv')
       params = {
         'uploadType' => 'media',
-        'accountId' => @smania_params[:account_id],
+        'accountId' => @medex_params[:account_id],
         "appendNumber" => 1,
-        "customDataSourceId" => @smania_params[:customDataSourceId],
+        "customDataSourceId" => @medex_params[:customDataSourceId],
         "date" => date,
         "type" => 'cost',
-        "webPropertyId" => @smania_params[:webPropertyId],
+        "webPropertyId" => @medex_params[:webPropertyId],
         "reset" => true
       }
 

@@ -23,7 +23,7 @@ $(document).ready ->
 
     name = []
     name[0] = switch url.domain()
-                when 'smania.si' then 'smania'
+                when 'medex.si' then 'medex'
     name[1] = standarize($('#utm_medium').val())
     name[2] = standarize($('#utm_campaign').val())
 
