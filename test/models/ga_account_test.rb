@@ -18,8 +18,8 @@ class GaAccountTest < ActiveSupport::TestCase
     @client.authorization.fetch_access_token!
     @analytics = @client.discovered_api('analytics', 'v3')
 
-    startDate = DateTime.now.prev_month.strftime("%Y-%m-%d")
-    endDate = DateTime.now.strftime("%Y-%m-%d")
+    startDate = DateTime.current.prev_month.strftime("%Y-%m-%d")
+    endDate = DateTime.current.strftime("%Y-%m-%d")
     profileID = '69872256' # 69872256: medex
 
     results = @client.execute(api_method: @analytics.data.ga.get, :parameters => {

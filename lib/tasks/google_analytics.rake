@@ -4,7 +4,7 @@ require "csv"
 namespace :ga do
   desc "Upload data to Google Analytics"
   task :upload_data => [:environment] do
-    puts "GA:UPLOAD_DATA: Starting at #{Time.now.to_s(:long)}..."
+    puts "GA:UPLOAD_DATA: Starting at #{Time.current.to_s(:long)}..."
 
     # I. input
     ga_account = GaAccount.first
@@ -41,14 +41,14 @@ namespace :ga do
 
   desc "Export report from Google Analytics"
   task :export_report => [:environment] do
-    puts "GA:EXPORT_REPORT: Starting at #{Time.now.to_s(:long)}..."
+    puts "GA:EXPORT_REPORT: Starting at #{Time.current.to_s(:long)}..."
     @ga_export = GaExport.last
     @ga_export.export_data_from_ga
   end
 
   desc "Prepare blank daily report for export"
   task :prepare_for_export => [:environment] do
-    puts "GA:PREPARE_FOR_EXPORT: Starting at #{Time.now.to_s(:long)}..."
+    puts "GA:PREPARE_FOR_EXPORT: Starting at #{Time.current.to_s(:long)}..."
     @current_ga_account = GaAccount.find_by alias: "www.medex.si"
     @ga_export = GaExport.create(start_date: 0.day.ago.to_date, end_date: 0.day.ago.to_date, profile_id: @current_ga_account.profile_id)
   end
