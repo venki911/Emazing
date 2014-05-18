@@ -17,23 +17,25 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
-every :day, at: "2:30 am" do
+Time.zone = 'Santiago'
+
+every :day, at: Time.zone.parse("2:30 am").localtime do
 	rake "fb:download_csv"
 end
 
-every :day, at: "2:45 am" do
+every :day, at: Time.zone.parse("2:45 am").localtime do
 	rake "fb:save_csv"
 end
 
-every :day, at: "3 am" do
+every :day, at: Time.zone.parse("3 am").localtime do
 	rake "ga:upload_data"
 end
 
-every :day, at: "6 am" do
+every :day, at: Time.zone.parse("6 am").localtime do
 	rake "ga:prepare_for_export"
 end
 
-every :day, at: "6:30 am" do
+every :day, at: Time.zone.parse("6:30 am").localtime do
 	rake "ga:export_report"
 end
 
