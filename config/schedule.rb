@@ -17,7 +17,7 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
-Time.zone = 'Santiago'
+Time.zone = 'Ljubljana'
 
 every :day, at: Time.zone.parse("2:30 am").localtime do
 	rake "fb:download_csv"
