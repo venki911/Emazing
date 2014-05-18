@@ -50,6 +50,6 @@ namespace :ga do
   task :prepare_for_export => [:environment] do
     puts "GA:PREPARE_FOR_EXPORT: Starting at #{Time.current.to_s(:long)}..."
     @current_ga_account = GaAccount.find_by alias: "www.medex.si"
-    @ga_export = GaExport.create(start_date: 0.day.ago.to_date, end_date: 0.day.ago.to_date, profile_id: @current_ga_account.profile_id)
+    @ga_export = GaExport.create(start_date: 1.day.ago.to_date, end_date: 1.day.ago.to_date, profile_id: @current_ga_account.profile_id)
   end
 end
