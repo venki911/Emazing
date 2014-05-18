@@ -1,62 +1,44 @@
 <p style="margin:30px 40px 0;"><%= link_to "<< Na prvo stran", root_path %></p>
 
 <h1>
-  Poročilo oglaševanja
+  Poročila oglaševanja
   <%= link_to "Izvozi v Excel", ga_exports_path(format: :xlsx), class: "btn btn-primary btn-sm" %>
 </h1>
 
-<p class="actions">Poročilo o oglešavalskih kampanjah za Google Analytics račun <strong>www.medex.si</strong> od <strong>2014-04-23<%#= @start_date %></strong> do <strong><%= @end_date %></strong>.</p>
+<p class="actions">Poročila o oglešavalskih kampanjah za Google Analytics račun <strong><%= @current_ga_account.alias %></strong><% unless @ga_exports.empty? %> od <strong><%= @ga_exports[-1].start_date %></strong> do <strong><%= @ga_exports[0].start_date %></strong><% end -%>.</p>
 
-<h2 style="margin:0 40px 0;"><small>2014-04-24</small></h2>
+<% @ga_exports.each do |ga_export| %>
+  <h2 style="margin:0 40px 0;">
+    <small><%= ga_export.start_date %></small>
+    <%= button_to "Ponovno osveži iz Google Analytics", { action: :update, id: ga_export.id }, method: :put, form_class: 'refresh_ga_export', class: "btn btn-default btn-xs" unless ga_export.start_date == Date.yesterday %>
+  </h2>
 
-<table class="table table-striped table-condensed">
-  <thead>
-    <tr>
-      <% @export_data[:column_headers].each do |column_header| %>
-      <th><%= column_header.gsub('ga:', '').titlecase %></th>
-      <% end -%>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @export_data[:rows].each do |row| %>
+  <table class="table table-striped table-condensed">
+    <thead>
       <tr>
-        <% row.each_with_index do |text, index| %>
-          <% if index == 3 %>
-            <td><span title="<%= text %>"><%= truncate(text, length: 14) %></span></td>
-          <% else %>
-            <td><%= text %></td>
-          <% end %>
+        <% ga_export.column_headers.each do |column_header| %>
+        <th><%= column_header.gsub('ga:', '').titlecase %></th>
         <% end -%>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<h2 style="margin:0 40px 0;"><small>2014-04-23</small></h2>
+    <tbody>
+      <% ga_export.ga_records.each do |record| %>
+        <tr>
+          <% record.data.each_with_index do |value, index| %>
+            <% if index == 3 %>
+              <td><span title="<%= value %>"><%= truncate(value, length: 14) %></span></td>
+            <% else %>
+              <td><%= value %></td>
+            <% end %>
+          <% end -%>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end -%>
 
-<table class="table table-striped table-condensed">
-  <thead>
-    <tr>
-      <% @export_data[:column_headers].each do |column_header| %>
-      <th><%= column_header.gsub('ga:', '').titlecase %></th>
-      <% end -%>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @export_data[:rows].each do |row| %>
-      <tr>
-        <% row.each_with_index do |text, index| %>
-          <% if index == 3 %>
-            <td><span title="<%= text %>"><%= truncate(text, length: 14) %></span></td>
-          <% else %>
-            <td><%= text %></td>
-          <% end %>
-        <% end -%>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @ga_exports.empty? %>
+  <h3 style="margin:0 40px 0;"><small>Poročila še niso izvožena.</small></h3>
+<% end -%>

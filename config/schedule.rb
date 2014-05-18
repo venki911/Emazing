@@ -17,8 +17,24 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
-# every :day, at: "2 am" do
-# 	rake "fb:download_csv"
-# end
+every :day, at: "2:30 am" do
+	rake "fb:download_csv"
+end
+
+every :day, at: "2:45 am" do
+	rake "fb:save_csv"
+end
+
+every :day, at: "3 am" do
+	rake "ga:upload_data"
+end
+
+every :day, at: "6 am" do
+	rake "ga:prepare_for_export"
+end
+
+every :day, at: "6:30 am" do
+	rake "ga:export_report"
+end
 
 # Learn more: http://github.com/javan/whenever

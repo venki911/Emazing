@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140426125713) do
+ActiveRecord::Schema.define(version: 20140428171320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,17 +34,24 @@ ActiveRecord::Schema.define(version: 20140426125713) do
     t.string   "account_id"
     t.string   "custom_data_source_id"
     t.string   "web_property_id"
-    t.string   "view_id"
+    t.string   "profile_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "alias"
   end
 
   create_table "ga_exports", force: true do |t|
     t.string   "profile_id"
     t.date     "start_date"
     t.date     "end_date"
-    t.hstore   "ga_data"
-    t.string   "kind"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "column_headers", default: [], null: false, array: true
+  end
+
+  create_table "ga_records", force: true do |t|
+    t.integer  "ga_export_id"
+    t.text     "data",         default: [], null: false, array: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,7 +1,11 @@
+column_headers = ["Account", "Start Date", "End Date"] + @ga_exports.first.column_headers
+
 wb = xlsx_package.workbook
-wb.add_worksheet(name: "Poročilo SMANIA") do |sheet|
-	sheet.add_row @export_data[:column_headers].map { |column_header| column_header.gsub('ga:', '').titlecase }
-	@export_data[:rows].each do |row|
-		sheet.add_row row
+wb.add_worksheet(name: "Poročilo #{@current_ga_account.alias}") do |sheet|
+	sheet.add_row column_headers.map { |column_header| column_header.gsub('ga:', '').titlecase }
+	@ga_exports.each do |ga_export|
+		ga_export.ga_records.map(&:data).each do |row|
+			sheet.add_row [@current_ga_account.alias, ga_export.start_date, ga_export.end_date] + row
+		end
 	end
 end
