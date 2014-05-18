@@ -21,14 +21,8 @@ $(document).ready ->
     url = url.addSearch('utm_content', standarize($('#utm_content').val())) if $('#utm_content').val()
     url = url.addSearch('utm_campaign', standarize($('#utm_campaign').val())) if $('#utm_campaign').val()
 
-    name = []
-    name[0] = switch url.domain()
-                when 'medex.si' then 'medex'
-    name[1] = standarize($('#utm_medium').val())
-    name[2] = standarize($('#utm_campaign').val())
-
     $('#campaign_url').removeAttr('disabled').val(url)
-    $('#campaign_name').removeAttr('disabled').val(name.join(' | '))
+    $('#campaign_name').removeAttr('disabled').val(standarize($('#utm_campaign').val()))
     $('#ad_name').removeAttr('disabled').val(standarize($('#utm_content').val()))
 
   standarize = (value) ->

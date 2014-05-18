@@ -35,31 +35,31 @@
         <input type="text" class="form-control" id="website_url" name="website_url" value="<%= params[:website_url] %>" required>
         <p class="help-block">(primer: http://www.emazing.si/odpri-racun)</p>
       </div>
-      <h4><small>2. korak:</small> Izpolni spodnja polja. Polja <strong>Source, Medium, Content</strong> and <strong>Campaign</strong> so obvezna.</h4>
+      <h4><small>2. korak:</small> Izpolni spodnja polja.</h4>
       <div class="form-group col-sm-5">
-        <label for="source">Source *</label>
+        <label for="source">Source</label>
         <input type="text" class="form-control" id="utm_source" name="utm_source" value="<%= params[:utm_source] %>" required>
-        <p class="help-block">(fb bsmart)</p>
+        <p class="help-block">(primer: emazing)</p>
       </div>
       <div class="form-group col-sm-5">
-        <label for="medium">Medium *</label>
+        <label for="medium">Medium</label>
         <input type="text" class="form-control" id="utm_medium" name="utm_medium" value="<%= params[:utm_medium] %>" required>
-        <p class="help-block">(medij oglaševanja: cpc, banner, email)</p>
+        <p class="help-block">(primer: facebook, adwords)</p>
       </div>
       <div class="form-group col-sm-5">
         <label for="term">Term</label>
         <input type="text" class="form-control" id="utm_term" name="utm_term" value="<%= params[:utm_term] %>">
-        <p class="help-block">(za razločevanje ključnih besed)</p>
+        <p class="help-block">(kampanja: izdelki, težave, remarketing, bannerji)</p>
       </div>
       <div class="form-group col-sm-5">
-        <label for="content">Content *</label>
+        <label for="content">Content</label>
         <input type="text" class="form-control" id="utm_content" name="utm_content" value="<%= params[:utm_content] %>" required>
-        <p class="help-block">(za razločevanje posameznih oglasov)</p>
+        <p class="help-block">(ad set: propolis, med, cvetni prah)</p>
       </div>
       <div class="form-group col-sm-5">
-        <label for="campaign">Campaign *</label>
+        <label for="campaign">Campaign</label>
         <input type="text" class="form-control" id="utm_campaign" name="utm_campaign" value="<%= params[:utm_campaign] %>" required>
-        <p class="help-block">(izdelek, promocijska koda ali slogan)</p>
+        <p class="help-block">(primer: medex)</p>
       </div>
       <button type="submit" class="btn btn-default">Generiraj URL, naziv kampanje in oglasa</button>
     </form>
@@ -71,7 +71,7 @@
           <input type="text" class="form-control" id="campaign_url" name="campaign_url" value="" disabled>
         </div>
         <div class="form-group">
-          <label for="content">Naziv Facebook kampanje</label>
+          <label for="content">Naziv kampanje</label>
           <input type="text" class="form-control" id="campaign_name" name="campaign_name" value="" disabled>
         </div>
         <div class="form-group">
