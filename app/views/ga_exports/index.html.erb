@@ -13,13 +13,12 @@
     <%= button_to "Ponovno osveži iz Google Analytics", { action: :update, id: ga_export.id }, method: :put, form_class: 'refresh_ga_export', class: "btn btn-default btn-xs" if ga_export.start_date == Date.yesterday %>
   </h2>
 
-  <table class="table table-striped table-condensed">
+  <table class="table table-striped table-condensed report_records">
     <thead>
       <tr>
         <% ga_export.column_headers.each do |column_header| %>
         <th><%= column_header.gsub('ga:', '').titlecase %></th>
         <% end -%>
-        <th colspan="3"></th>
       </tr>
     </thead>
 
@@ -27,15 +26,18 @@
       <% ga_export.ga_records.each do |record| %>
         <tr>
           <% record.data.each_with_index do |value, index| %>
-            <% if index == 3 %>
-              <td><span title="<%= value %>"><%= truncate(value, length: 14) %></span></td>
-            <% else %>
-              <td><%= value %></td>
-            <% end %>
+            <td><span title="<%= value %>"><%= truncate(value, length: 17) %></span></td>
           <% end -%>
         </tr>
       <% end %>
     </tbody>
+    <tfoot>
+      <tr>
+        <% ga_export.column_headers.each do |column_header| %>
+          <th></th>
+        <% end -%>
+      </tr>
+    </tfoot>
   </table>
 <% end -%>
 

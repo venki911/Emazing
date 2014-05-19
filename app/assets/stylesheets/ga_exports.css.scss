@@ -10,10 +10,7 @@
 
 		tr td:first-child, tr th:first-child {
 			padding-left: 40px;
-		}
-
-		tr td:last-child, tr th:last-child {
-			padding-right: 0;
+			background-position: 22px center;
 		}
 	}
 
@@ -27,6 +24,20 @@
 
 		div {
 			display: inline;
+		}
+	}
+
+	.dataTables_filter {
+		margin: -34px 25px 0 0;
+		font-size: 13px;
+
+		label {
+			margin: 0;
+			font-weight: normal;
+
+			input {
+				line-height: 100%;
+			}
 		}
 	}
 }
