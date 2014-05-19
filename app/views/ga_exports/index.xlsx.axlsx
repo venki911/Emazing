@@ -2,10 +2,10 @@ column_headers = ["Account", "Start Date", "End Date"] + @ga_exports.first.colum
 
 wb = xlsx_package.workbook
 wb.add_worksheet(name: "Poročilo #{@current_ga_account.alias}") do |sheet|
-	sheet.add_row column_headers.map { |column_header| column_header.gsub('ga:', '').titlecase }
+	sheet.add_row column_headers.map { |column_header| column_header.gsub('ga:', '').titlecase } + ["Profit"]
 	@ga_exports.each do |ga_export|
 		ga_export.ga_records.map(&:data).each do |row|
-			sheet.add_row [@current_ga_account.alias, ga_export.start_date, ga_export.end_date] + row
+			sheet.add_row [@current_ga_account.alias, ga_export.start_date, ga_export.end_date] + row + [calculate_profit(row[8], row[5])]
 		end
 	end
 end

@@ -19,6 +19,7 @@
         <% ga_export.column_headers.each do |column_header| %>
         <th><%= column_header.gsub('ga:', '').titlecase %></th>
         <% end -%>
+        <th>Profit</th>
       </tr>
     </thead>
 
@@ -28,6 +29,7 @@
           <% record.data.each_with_index do |value, index| %>
             <td><span title="<%= value %>"><%= truncate(value, length: 17) %></span></td>
           <% end -%>
+          <td><span><%= calculate_profit(record.data[8], record.data[5]) %></span></td>
         </tr>
       <% end %>
     </tbody>
@@ -36,6 +38,7 @@
         <% ga_export.column_headers.each do |column_header| %>
           <th></th>
         <% end -%>
+        <th></th>
       </tr>
     </tfoot>
   </table>
