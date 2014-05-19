@@ -10,6 +10,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'google-api-client'
 gem 'axlsx_rails'
 gem 'whenever', :require => false
+gem 'dalli'
 # gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
