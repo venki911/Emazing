@@ -117,6 +117,8 @@ class GaRecord < ActiveRecord::Base
     	else
     		order_query = "LOWER(data -> '#{by}') #{direction}"
     	end
+
+    	order_query = "#{order_query}, LOWER(data -> 'source') asc"
     end
 
     where(where_query).order(order_query)
