@@ -27,7 +27,7 @@ TableReport = React.createClass
     #   query_section
     # url = "#{location.pathname}.json?#{query_sections.join('&')}"
 
-    query = "order[by]=#{params.order.by}&order[direction]=#{params.order.direction}"
+    query = "order[by]=#{params.order.by}&order[direction]=#{params.order.direction}&filter[source][]=emazing"
     url = "#{location.pathname}.json?#{query}"
     console.log url
     url
