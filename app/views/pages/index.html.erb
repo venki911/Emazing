@@ -25,11 +25,12 @@
 
 <div class="row">
   <div class="col-md-12">
-		<h1>Emazing</h1>
+    <p class="logo_wrap"><%= image_tag('emazing_logo.jpg', width: '150') %></p>
+    <h2>Izberi orodje:</h2>
 		<ul>
 			<li><%= link_to "Generator URL-jev", fb_url_builder_path %></li>
       <!-- <li><%= link_to "Ročen uvoz stroškov oglaševanja na Facebook-u v Google Analytics", new_daily_report_path %></li> -->
-      <li><%= link_to "Izvoz podatkov o oglaševanju za nadaljno analizo v Excel datoteki", ga_exports_path %></li>
+      <li><%= link_to "Analiza rezultatov oglaševanja", ga_exports_path %></li>
 		</ul>
 	</div>
 </div>
