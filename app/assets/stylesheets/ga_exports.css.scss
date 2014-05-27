@@ -52,6 +52,10 @@
 					text-decoration: none;
 					color: #428BCA;
 				}
+
+				&.text_filter, &.date_filter {
+					cursor: not-allowed;
+				}
 			}
 
 			span {
@@ -76,6 +80,10 @@
 					&:first-child {
 						background-position: 24px center;
 					}
+				}
+
+				&[data-column-name="revenue"], &[data-column-name="profit"], &[data-column-name="profitability"] {
+					span { cursor: not-allowed; }
 				}
 
 				&.sorting {

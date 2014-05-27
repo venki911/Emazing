@@ -60,6 +60,9 @@ TableReport = React.createClass
 
     @loadReportFromServer({order: {by: header.name, direction: direction}})
 
+  openFilter: ->
+    return false;
+
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
       class_name = 'sorting'
@@ -67,13 +70,13 @@ TableReport = React.createClass
       class_name = "sorting_asc" if header.name == @state.query.order.by && @state.query.order.direction == 'asc'
       (th {className: class_name, 'data-column-name': header.name}, (span {onClick: @toggleSort.bind(this, header)}, header.title))).bind(this)
 
-    filters = @state.data.column_headers.map (header) ->
+    filters = @state.data.column_headers.map ((header) ->
       header_summary = switch header.summary.type
-        when 'date_filter', 'text_filter' then (a {href: "#", className: header.summary.type}, header.summary.value)
+        when 'date_filter', 'text_filter' then (a {href: "#", className: header.summary.type, onClick: @openFilter}, header.summary.value)
         when 'float_sum', 'integer_sum', 'custom_sum' then (span {className: header.summary.type}, header.summary.value)
         else (span {className: header.summary.type}, header.summary.value)
 
-      (th {}, header_summary)
+      (th {}, header_summary)).bind(this)
 
     rows = @state.data.rows.map (row) ->
       class_name = 'danger' if row.profitability < 0
