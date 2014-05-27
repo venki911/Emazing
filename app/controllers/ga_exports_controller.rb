@@ -1,13 +1,12 @@
-require "google/api_client"
-
 class GaExportsController < ApplicationController
   # GET /ga_exports
   # GET /ga_exports.json
   def index
-    @ga_exports = GaExport.where(profile_id: @current_ga_account.profile_id).order('start_date DESC').includes(:ga_records)
+    @ga_records = GaRecord.from_account(@current_ga_account).filter(params)
 
     respond_to do |format|
       format.html
+      format.json
       format.xlsx do
         render xlsx: 'index', filename: "#{@current_ga_account.alias}-#{Date.current}.xlsx", disposition: 'attachment'
       end

@@ -62,7 +62,7 @@ module GoogleAnalytics
         'start-date' => date,
         'end-date' => date,
         'dimensions' => "ga:source,ga:campaign,ga:medium,ga:adContent,ga:keyword",
-        'metrics' => "ga:adCost,ga:adClicks,ga:itemQuantity,ga:transactionRevenue,ga:transactions",
+        'metrics' => "ga:adCost,ga:adClicks,ga:sessions,ga:itemQuantity,ga:transactionRevenue,ga:transactions",
         'sort' => "-ga:transactions,-ga:adCost,-ga:transactionRevenue",
         'max-results' => "10000"
       })

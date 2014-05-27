@@ -6,11 +6,21 @@
 	.table {
 		td, th {
 			font-size: 13px;
+			white-space: nowrap;
+			padding-left: 13px;
+		}
+
+		td {
+			span {
+				width: 100px;
+				display: block;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
 		}
 
 		tr td:first-child, tr th:first-child {
 			padding-left: 40px;
-			background-position: 22px center;
 		}
 	}
 
@@ -27,17 +37,63 @@
 		}
 	}
 
-	.dataTables_filter {
-		margin: -34px 40px 0 0;
-		font-size: 13px;
+	#table_report {
+		overflow-x: scroll;
+		width: 100%;
 
-		label {
-			margin: 0;
-			font-weight: normal;
+		tr.filters {
+			a {
+				font-weight: normal;
+				font-size: 12px;
+				color: #9C9C9C;
+				border-bottom: 1px dotted #9C9C9C;
 
-			input {
-				line-height: 100%;
+				&:hover {
+					text-decoration: none;
+					color: #428BCA;
+				}
+			}
+
+			span {
+				font-weight: normal;
+			}
+
+			th {
+				border-bottom: 2px solid #DDD;
 			}
 		}
+
+		tr.headers {
+			th {
+				text-transform: uppercase;
+				font-family: Verdana;
+				font-size: 10px;
+				// font-weight: normal;
+
+				&.sorting, &.sorting_desc, &.sorting_asc {
+					span { cursor: pointer; }
+
+					&:first-child {
+						background-position: 24px center;
+					}
+				}
+
+				&.sorting {
+					background: image-url("sort_both.png") no-repeat -4px center;
+				}
+
+				&.sorting_desc {
+					background: image-url("sort_desc.png") no-repeat -4px center;
+				}
+
+				&.sorting_asc {
+					background: image-url("sort_asc.png") no-repeat -4px center;
+				}
+			}
+		}
+	}
+
+	.table > thead > tr > .danger, .table > thead > .danger > td, .table > thead > .danger > th, .table > tbody > tr > .danger, .table > tbody > .danger > td, .table > tbody > .danger > th, .table > tfoot > tr > .danger, .table > tfoot > .danger > td, .table > tfoot > .danger > th {
+		background-color: #F2DEDE !important;
 	}
 }

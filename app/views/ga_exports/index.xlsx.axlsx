@@ -1,11 +1,17 @@
-column_headers = ["Account", "Start Date", "End Date"] + @ga_exports.first.column_headers
-
 wb = xlsx_package.workbook
+
 wb.add_worksheet(name: "Poročilo #{@current_ga_account.alias}") do |sheet|
-	sheet.add_row column_headers.map { |column_header| column_header.gsub('ga:', '').titlecase } + ["Profit"]
-	@ga_exports.each do |ga_export|
-		ga_export.ga_records.map(&:data).each do |row|
-			sheet.add_row [@current_ga_account.alias, ga_export.start_date, ga_export.end_date] + row + [calculate_profit(row[8], row[5])]
+	sheet.add_row GaRecord::COLUMN_HEADERS.map {|column| column.last[:title]}
+
+	@ga_records.each do |ga_record|
+		columns_values = GaRecord.column_headers.map do |column|
+			value = ga_record.send(column)
+			if value.class == BigDecimal
+				number_to_currency(value)
+			else
+				value
+			end
 		end
+		sheet.add_row columns_values
 	end
 end
