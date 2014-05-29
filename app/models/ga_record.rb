@@ -135,7 +135,13 @@ class GaRecord < ActiveRecord::Base
     params_order[:by] ||= 'date'
     params_order[:direction] ||= 'desc'
 
-    order("#{params_order[:by]} #{params_order[:direction]}, ga_records.id #{params_order[:direction]}")
+    if params_order[:by] == 'profitability'
+    	secundary_order_column = 'profit'
+    else
+    	secundary_order_column = 'ga_records.id'
+    end
+
+    order("#{params_order[:by]} #{params_order[:direction]}, #{secundary_order_column} #{params_order[:direction]}")
 	end
 
 	scope :from_account, -> (account) { where(ga_exports: {profile_id: account.profile_id}).joins(:ga_export) }
