@@ -1,39 +1,6 @@
 class GaRecord < ActiveRecord::Base
 	belongs_to :ga_export
 
-	TAX = 1.22
-	EMAZING_PERCENTAGE = 0.3
-
-	hstore_accessor :data,
-		date: :date,
-		source: :string,
-		campaign: :string,
-		medium: :string,
-		ad_content: :string,
-		keyword: :string,
-		ad_cost: :decimal,
-		ad_clicks: :integer,
-		sessions: :integer,
-		item_quantity: :integer,
-		transaction_revenue: :decimal,
-		transactions: :integer
-
-	def revenue
-		(transaction_revenue/TAX)*EMAZING_PERCENTAGE
-	end
-
-	def profit
-		revenue - ad_cost
-	end
-
-	def profitability
-		if ad_cost == 0
-			"n/a"
-		else
-			(profit/ad_cost*100).to_i
-		end
-	end
-
   COLUMN_HEADERS =
     {date: {title: "Date", summary_type: :date_filter},
      source: {title: "Source", summary_type: :text_filter},
@@ -51,6 +18,62 @@ class GaRecord < ActiveRecord::Base
      profit: {title: "Profit", summary_type: :custom_sum},
      profitability: {title: "Profitability", summary_type: :custom_sum}}
 
+	TAX = 1.22
+	EMAZING_PERCENTAGE = 0.3
+	FORMULA = {}
+
+	FORMULA[:date] = "to_date((data -> 'date'), 'YYYY-MM-DD')"
+	def date() attributes['date'] end
+
+	FORMULA[:source] = "data -> 'source'"
+	def source() attributes['source'] end
+
+	FORMULA[:campaign] = "data -> 'campaign'"
+	def campaign() attributes['campaign'] end
+
+	FORMULA[:medium] = "data -> 'medium'"
+	def medium() attributes['medium'] end
+
+	FORMULA[:ad_content] = "data -> 'ad_content'"
+	def ad_content() attributes['ad_content'] end
+
+	FORMULA[:keyword] = "data -> 'keyword'"
+	def keyword() attributes['keyword'] end
+
+	FORMULA[:ad_cost] = "(data -> 'ad_cost')::float"
+	def ad_cost() attributes['ad_cost'].to_d end
+
+	FORMULA[:ad_clicks] = "(data -> 'ad_clicks')::integer"
+	def ad_clicks() attributes['ad_clicks'] end
+
+	FORMULA[:sessions] = "(data -> 'sessions')::integer"
+	def sessions() attributes['sessions'] end
+
+	FORMULA[:item_quantity] = "(data -> 'item_quantity')::integer"
+	def item_quantity() attributes['item_quantity'] end
+
+	FORMULA[:transaction_revenue] = "(data -> 'transaction_revenue')::float"
+	def transaction_revenue() attributes['transaction_revenue'].to_d end
+
+	FORMULA[:transactions] = "(data -> 'transactions')::integer"
+	def transactions() attributes['transactions'] end
+
+	FORMULA[:revenue] = "(data -> 'transaction_revenue')::float/#{TAX}*#{EMAZING_PERCENTAGE}"
+	def revenue() attributes['revenue'].to_d end
+
+	FORMULA[:profit] = "(#{FORMULA[:revenue]} - (data -> 'ad_cost')::float)"
+	def profit() attributes['profit'].to_d end
+
+	FORMULA[:profitability] = %Q{
+		CASE
+		  WHEN (data -> 'ad_cost')::float != 0
+		  THEN (#{FORMULA[:profit]}/(data -> 'ad_cost')::float*100)
+		  ELSE NULL
+		  END
+		}
+	def profitability() attributes['profitability'].to_i unless attributes['profitability'] == nil end
+
+  scope :with_calculated_attrs, -> { select "ga_records.id, " + COLUMN_HEADERS.map {|column| name = column.first; "#{FORMULA[name]} as #{name}"}.join(', ') }
 
 	def self.column_headers
 		COLUMN_HEADERS.map(&:first)
@@ -89,39 +112,30 @@ class GaRecord < ActiveRecord::Base
 		summaries
 	end
 
-	scope :filter, -> (params = nil) do
+	scope :filter_by, -> (params_filter = nil) do
 		where_query = nil
-		order_query = nil
 
-    if params[:filter]
-    	where_query = params[:filter].map { |attribute|
+    if params_filter
+    	where_query = params_filter.map { |attribute|
     		name = attribute.first
     		selected_values = attribute.last
 
     		or_query = selected_values.map { |value|
-    			"data @> '#{name} => #{value}'"
+    			"(#{FORMULA[name.to_sym]}) = '#{value}'"
     		}.
     		join(' OR ') }.
     		map { |query| "(#{query})" }.join(' AND ')
     end
+    
+    where(where_query)
+	end
 
-    if params[:order]
-    	by = params[:order][:by] || 'date'
-    	direction = params[:order][:direction] || 'desc'
+	scope :sort_by, -> (params_order) do
+		params_order ||= {}
+    params_order[:by] ||= 'date'
+    params_order[:direction] ||= 'desc'
 
-    	# dasdasasd
-    	if COLUMN_HEADERS[by.to_sym][:summary_type] == :integer_sum
-    		order_query = "LOWER(data -> '#{by}')::integer #{direction}"
-    	elsif COLUMN_HEADERS[by.to_sym][:summary_type] == :float_sum
-    		order_query = "LOWER(data -> '#{by}')::float #{direction}"
-    	else
-    		order_query = "LOWER(data -> '#{by}') #{direction}"
-    	end
-
-    	order_query = "#{order_query}, LOWER(data -> 'source') asc"
-    end
-
-    where(where_query).order(order_query)
+    order("#{params_order[:by]} #{params_order[:direction]}, ga_records.id desc")
 	end
 
 	scope :from_account, -> (account) { where(ga_exports: {profile_id: account.profile_id}).joins(:ga_export) }
