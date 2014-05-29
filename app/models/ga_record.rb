@@ -58,17 +58,17 @@ class GaRecord < ActiveRecord::Base
 	FORMULA[:transactions] = "(data -> 'transactions')::integer"
 	def transactions() attributes['transactions'] end
 
-	FORMULA[:revenue] = "(data -> 'transaction_revenue')::float/#{TAX}*#{EMAZING_PERCENTAGE}"
+	FORMULA[:revenue] = "#{FORMULA[:transaction_revenue]}/#{TAX}*#{EMAZING_PERCENTAGE}"
 	def revenue() attributes['revenue'].to_d end
 
-	FORMULA[:profit] = "(#{FORMULA[:revenue]} - (data -> 'ad_cost')::float)"
+	FORMULA[:profit] = "(#{FORMULA[:revenue]} - #{FORMULA[:ad_cost]})"
 	def profit() attributes['profit'].to_d end
 
 	FORMULA[:profitability] = %Q{
 		CASE
-		  WHEN (data -> 'ad_cost')::float != 0
-		  THEN (#{FORMULA[:profit]}/(data -> 'ad_cost')::float*100)
-		  ELSE NULL
+		  WHEN #{FORMULA[:ad_cost]} = 0
+		  THEN NULL
+		  ELSE (#{FORMULA[:profit]}/#{FORMULA[:ad_cost]}*100)
 		  END
 		}
 	def profitability() attributes['profitability'].to_i unless attributes['profitability'] == nil end
