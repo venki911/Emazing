@@ -17,6 +17,10 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
+
+			.no-value {
+				color: #ccc;
+			}
 		}
 
 		tr td:first-child, tr th:first-child {

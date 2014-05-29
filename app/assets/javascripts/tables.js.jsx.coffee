@@ -10,7 +10,10 @@ Currency = React.createClass
 
 Percentage = React.createClass
   render: ->
-    (span {className: 'currency'}, ("#{@props.value}%" if @props.value))
+    if @props.value
+      (span {className: 'percentage'}, "#{@props.value}%")
+    else
+      (span {className: 'percentage no-value'}, 'n/a')
 
 TableReport = React.createClass
   getInitialState: ->
