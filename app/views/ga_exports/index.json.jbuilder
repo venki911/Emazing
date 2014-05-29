@@ -7,11 +7,7 @@ json.cache! [@ga_records.map(&:id), params] do
 			json.name header.first.to_s
 			json.summary do
 				json.type summaries[header.first][:type]
-				if summaries[header.first][:value].class == Float
-					json.value number_to_currency(summaries[header.first][:value])
-				else
-					json.value summaries[header.first][:value]
-				end
+				json.value summaries[header.first][:value]
 			end
 		end
 	end
@@ -47,11 +43,7 @@ json.cache! [@ga_records.map(&:id), params] do
 
 			column_headers.each do |column|
 				value = ga_record.send(column)
-				if value.class == BigDecimal
-					json.set! column, number_to_currency(value)
-				else
-					json.set! column, value
-				end
+				json.set! column, value
 			end
 		end
 	end

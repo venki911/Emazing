@@ -2,6 +2,16 @@
 
 {a, table, thead, tr, tbody, th, td, span} = React.DOM
 
+Currency = React.createClass
+  render: ->
+    (span {className: 'currency'},
+      (span {className: 'unit'}, '€ '),
+      (span {className: 'number'}, parseFloat(@props.value).toFixed(2) if @props.value))
+
+Percentage = React.createClass
+  render: ->
+    (span {className: 'currency'}, ("#{@props.value}%" if @props.value))
+
 TableReport = React.createClass
   getInitialState: ->
     { data: column_headers: [], rows: [] }
@@ -29,7 +39,6 @@ TableReport = React.createClass
 
     query = "order[by]=#{params.order.by}&order[direction]=#{params.order.direction}&filter[source][]=emazing"
     url = "#{location.pathname}.json?#{query}"
-    console.log url
     url
 
   loadReportFromServer: (params) ->
@@ -70,41 +79,54 @@ TableReport = React.createClass
       class_name = "sorting_asc" if header.name == @state.query.order.by && @state.query.order.direction == 'asc'
       (th {className: class_name, 'data-column-name': header.name}, (span {onClick: @toggleSort.bind(this, header)}, header.title))).bind(this)
 
-    filters = @state.data.column_headers.map ((header) ->
-      header_summary = switch header.summary.type
-        when 'date_filter', 'text_filter' then (a {href: "#", className: header.summary.type, onClick: @openFilter}, header.summary.value)
-        when 'float_sum', 'integer_sum', 'custom_sum' then (span {className: header.summary.type}, header.summary.value)
-        else (span {className: header.summary.type}, header.summary.value)
-
-      (th {}, header_summary)).bind(this)
+    if @state.data.column_headers.length > 0
+      filters = [
+        (th {}, (a {href: "#", className: @state.data.column_headers[0].summary.type, onClick: @openFilter}, @state.data.column_headers[0].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[1].summary.type, onClick: @openFilter}, @state.data.column_headers[1].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[2].summary.type, onClick: @openFilter}, @state.data.column_headers[2].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[3].summary.type, onClick: @openFilter}, @state.data.column_headers[3].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[4].summary.type, onClick: @openFilter}, @state.data.column_headers[4].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[5].summary.type, onClick: @openFilter}, @state.data.column_headers[5].summary.value)),
+        (th {}, (span {className: @state.data.column_headers[6].summary.type}, Currency({value: @state.data.column_headers[6].summary.value}))),
+        (th {}, (span {className: @state.data.column_headers[7].summary.type}, @state.data.column_headers[7].summary.value)),
+        (th {}, (span {className: @state.data.column_headers[8].summary.type}, @state.data.column_headers[8].summary.value)),
+        (th {}, (span {className: @state.data.column_headers[9].summary.type}, @state.data.column_headers[9].summary.value)),
+        (th {}, (span {className: @state.data.column_headers[10].summary.type}, Currency({value: @state.data.column_headers[10].summary.value}))),
+        (th {}, (span {className: @state.data.column_headers[11].summary.type}, @state.data.column_headers[11].summary.value)),
+        (th {}, (span {className: @state.data.column_headers[12].summary.type}, Currency({value: @state.data.column_headers[12].summary.value}))),
+        (th {}, (span {className: @state.data.column_headers[13].summary.type}, Currency({value: @state.data.column_headers[13].summary.value}))),
+        (th {}, (span {className: @state.data.column_headers[14].summary.type}, Percentage({value: @state.data.column_headers[14].summary.value})))]
+    else
+      filters = []
 
     rows = @state.data.rows.map (row) ->
       class_name = 'danger' if row.profitability < 0
       class_name = 'success' if row.profitability > 0
+      class_name = 'success' if row.profitability == null && row.profit > 0
 
       (tr {className:class_name}, [
-        (td {title: row.date}, (span {}, row.date)),
-        (td {title: row.source}, (span {}, row.source)),
-        (td {title: row.campaign}, (span {}, row.campaign)),
-        (td {title: row.medium}, (span {}, row.medium)),
-        (td {title: row.ad_content}, (span {}, row.ad_content)),
-        (td {title: row.keyword}, (span {}, row.keyword)),
-        (td {}, (span {}, row.ad_cost)),
-        (td {}, (span {}, row.ad_clicks)),
-        (td {}, (span {}, row.sessions)),
-        (td {}, (span {}, row.item_quantity)),
-        (td {}, (span {}, row.transaction_revenue)),
-        (td {}, (span {}, row.transactions)),
-        (td {}, (span {}, row.revenue)),
-        (td {}, (span {}, row.profit)),
-        (td {}, (span {}, row.profitability))
+        (td {title: row.date}, (span {className: 'cell_wrap'}, row.date)),
+        (td {title: row.source}, (span {className: 'cell_wrap'}, row.source)),
+        (td {title: row.campaign}, (span {className: 'cell_wrap'}, row.campaign)),
+        (td {title: row.medium}, (span {className: 'cell_wrap'}, row.medium)),
+        (td {title: row.ad_content}, (span {className: 'cell_wrap'}, row.ad_content)),
+        (td {title: row.keyword}, (span {className: 'cell_wrap'}, row.keyword)),
+        (td {}, (span {className: 'cell_wrap'}, Currency({value: row.ad_cost}))),
+        (td {}, (span {className: 'cell_wrap'}, row.ad_clicks)),
+        (td {}, (span {className: 'cell_wrap'}, row.sessions)),
+        (td {}, (span {className: 'cell_wrap'}, row.item_quantity)),
+        (td {}, (span {className: 'cell_wrap'}, Currency({value: row.transaction_revenue}))),
+        (td {}, (span {className: 'cell_wrap'}, row.transactions)),
+        (td {}, (span {className: 'cell_wrap'}, Currency({value: row.revenue}))),
+        (td {}, (span {className: 'cell_wrap'}, Currency({value: row.profit}))),
+        (td {}, (span {className: 'cell_wrap'}, Percentage({value: row.profitability})))
       ])
 
     (table {className: "table table-striped table-condensed report_records", onClick: @filter}, [
       (thead {}, [
         (tr {className: "headers"}, column_headers),
         (tr {className: "filters"}, filters)
-      ])
+      ]),
       (tbody {}, rows)
     ])
 
