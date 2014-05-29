@@ -83,10 +83,6 @@
 					}
 				}
 
-				&[data-column-name="revenue"], &[data-column-name="profit"], &[data-column-name="profitability"] {
-					span { cursor: not-allowed; }
-				}
-
 				&.sorting {
 					background: image-url("sort_both.png") no-repeat -4px center;
 				}
