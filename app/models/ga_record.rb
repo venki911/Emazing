@@ -135,7 +135,7 @@ class GaRecord < ActiveRecord::Base
     params_order[:by] ||= 'date'
     params_order[:direction] ||= 'desc'
 
-    order("#{params_order[:by]} #{params_order[:direction]}, ga_records.id desc")
+    order("#{params_order[:by]} #{params_order[:direction]}, ga_records.id #{params_order[:direction]}")
 	end
 
 	scope :from_account, -> (account) { where(ga_exports: {profile_id: account.profile_id}).joins(:ga_export) }
