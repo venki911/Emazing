@@ -19,10 +19,6 @@ set :output, "/home/deployer/apps/emazing/shared/log/cron.log"
 
 Time.zone = 'Ljubljana'
 
-every 1.minute do
-	command "mkdir ~/#{Time.current.to_s(:db).gsub(' ', '-')}"
-end
-
 every :day, at: Time.zone.parse("2:30 am").localtime do
 	rake "fb:download_csv"
 end
