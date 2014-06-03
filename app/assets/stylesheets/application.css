@@ -13,6 +13,7 @@
  *= require bootstrap/dist/css/bootstrap.min
  *= require bootstrap/dist/css/bootstrap-theme.min
  *= require chosen_v1.1.0/chosen.min
+ *= require bootstrap-daterangepicker/daterangepicker-bs3
  *= require_tree .
  *= require_self
  */
