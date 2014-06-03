@@ -19,7 +19,7 @@ set :output, "/home/deployer/apps/emazing/shared/log/cron.log"
 
 Time.zone = 'Ljubljana'
 
-every :minute do
+every 1.minute do
 	command "mkdir ~/#{Time.current.to_s(:db).gsub(' ', '-')}"
 end
 
