@@ -19,6 +19,7 @@
     "bootstrap": "~3.1.1",
     "react": "~0.10.0",
     "react-bootstrap": "~0.10.2",
-    "react-chosen": "~0.3.0"
+    "react-chosen": "~0.3.0",
+    "chosen_v1.1.0": "https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip"
   }
 }

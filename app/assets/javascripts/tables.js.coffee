@@ -1,5 +1,3 @@
-###* @jsx React.DOM ###
-
 {a, table, thead, tr, tbody, th, td, span} = React.DOM
 
 Currency = React.createClass
