@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140526061454) do
+ActiveRecord::Schema.define(version: 20140717071708) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,6 @@ ActiveRecord::Schema.define(version: 20140526061454) do
     t.string   "facebook_ads_account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "daily_reports", force: true do |t|
-    t.date "created_at"
-    t.text "body"
   end
 
   create_table "ga_accounts", force: true do |t|
@@ -42,10 +37,10 @@ ActiveRecord::Schema.define(version: 20140526061454) do
 
   create_table "ga_exports", force: true do |t|
     t.string   "profile_id"
+    t.date     "start_date"
+    t.date     "end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "end_date"
-    t.date     "start_date"
   end
 
   create_table "ga_records", force: true do |t|
