@@ -1,7 +1,47 @@
 .ga_exports_index {
-	h1 {
-		padding-left: 40px;
+	.page_actions {
+		margin:30px 40px 0;
+		position: relative;
 	}
+
+	.account_switcher {
+		margin: 0 0 0 10px;
+
+		span {
+			font-size: 10px;
+			position: relative;
+			top: -2px;
+		}
+	}
+
+	header {
+		margin: 0 40px 40px;
+		position: relative;
+
+		h3 {
+			line-height: 32px;
+		}
+
+		#report_daterange {
+			position: absolute;
+			right: 0;
+			top: -4px;
+			display: inline-block;
+			background: #fff;
+			cursor: pointer;
+			padding: 5px 10px;
+			border: 1px solid #ccc;
+
+			.glyphicon-calendar {
+				font-size: 12px;
+			}
+		}
+
+		.report_export_to_xlsx {
+			position: relative;
+		}
+	}
+
 
 	.table {
 		td, th {

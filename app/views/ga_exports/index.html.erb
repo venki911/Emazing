@@ -1,10 +1,18 @@
-<p style="margin:30px 40px 0;"><%= link_to "<< Na prvo stran", root_path %></p>
+<p class="page_actions">
+	<%= link_to "<< Na prvo stran", root_path %>
+</p>
 
-<h1>
-  Poročila oglaševanja
-  <%= link_to "Izvozi v Excel", ga_exports_path(format: :xlsx), class: "btn btn-primary btn-sm" %>
-</h1>
+<header>
+	<h3>
+	  Poročilo oglaševanja
+	  <small class="account_switcher"><%= @current_ga_account.alias %> <span>▼</span></small>
+	  <%#= link_to "Izvozi v Excel", ga_exports_path(format: :xlsx), class: "btn btn-default btn-xs report_export_to_xlsx" %>
+	</h3>
 
-<p class="actions">Poročila o oglešavalskih kampanjah za Google Analytics račun <strong><%= @current_ga_account.alias %></strong>.</p>
+	<div id="report_daterange" class="btn">
+	  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+	  <span></span> <b class="caret"></b>
+	</div>
+</header>
 
 <div id="table_report"></div>
