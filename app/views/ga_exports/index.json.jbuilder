@@ -9,6 +9,7 @@ json.cache! [@ga_records.map(&:id), params] do
 				json.type summaries[header.first][:type]
 				json.value summaries[header.first][:value]
 			end
+			json.options @ga_records.map {|record| record.send(header.first)}.uniq
 		end
 	end
 

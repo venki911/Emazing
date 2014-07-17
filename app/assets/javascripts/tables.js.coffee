@@ -1,4 +1,4 @@
-{a, table, thead, tr, tbody, th, td, span} = React.DOM
+{a, table, thead, tr, tbody, th, td, span, form, input, select, label} = React.DOM
 
 Currency = React.createClass
   render: ->
@@ -23,33 +23,21 @@ TableReport = React.createClass
   # to
   #   "/ga_exports.json?order[by]=source&order[direction]=asc&filter[source][]=emazing&filter[source][]=google&filter[medium][]=facebook"
   getURL: (params) ->
-    # url_query = @state.url_query
-    # query_sections = Object.keys(url_query).map (value, index) ->
-    #   params = url_query[value]
-    #   if value == 'order'
-    #     query_section = "order[by]=#{params.by}&order[direction]=#{params.direction}"
-    #   if value == 'filter'
-    #     filter_queries = Object.keys(params).map (column_name, index) ->
-    #       column_values = params[column_name] # ['emazing']
-    #       queries = column_values.map (value) ->
-    #         "filter[#{column_name}][]=#{value}"
-    #       column_filter_query = queries.join('&')
-    #     query_section = filter_queries.join('&')
-    #   query_section
-    # url = "#{location.pathname}.json?#{query_sections.join('&')}"
-
-    query = "order[by]=#{params.order.by}&order[direction]=#{params.order.direction}&filter[source][]=emazing"
-    url = "#{location.pathname}.json?#{query}"
-    url
+    "#{location.pathname}.json#{location.search}"
 
   loadReportFromServer: (params) ->
     $.ajax
-      url: @getURL(params)
+      url: @getURL()
       dataType: 'json'
       success: ((data) ->
         @setState
           data: data
           query: params
+
+        $('.text_filter').popover
+          placement: 'bottom'
+          html: true
+
       ).bind(this)
       error: ((xhr, status, error) ->
         alert(status)
@@ -73,6 +61,26 @@ TableReport = React.createClass
   openFilter: ->
     return false;
 
+  commit: (event) ->
+    params = decodeURIComponent($('form').serialize())
+    console.log params
+    history.replaceState('string', 'title', location.origin + location.pathname + '?' + params)
+    @loadReportFromServer({order: {by: 'date', direction: 'desc'}})
+    return false
+
+  onFormChange: ->
+    console.log 'yep'
+    $('form').submit()
+    return false
+
+  generatePopoverFilter: (header) ->
+    options = header.options.map ((option) ->
+      id = "filter_#{header.name}_#{option}"
+      (label {for: id}, [
+        (input {type: 'checkbox', name: "filter[#{header.name}][]", id: id, defaultValue: option}),
+        (span {}, option)])).bind(this)
+    React.renderComponentToString((span {}, options))
+
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
       class_name = 'sorting'
@@ -82,12 +90,12 @@ TableReport = React.createClass
 
     if @state.data.column_headers.length > 0
       filters = [
-        (th {}, (a {href: "#", className: @state.data.column_headers[0].summary.type, onClick: @openFilter}, @state.data.column_headers[0].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[1].summary.type, onClick: @openFilter}, @state.data.column_headers[1].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[2].summary.type, onClick: @openFilter}, @state.data.column_headers[2].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[3].summary.type, onClick: @openFilter}, @state.data.column_headers[3].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[4].summary.type, onClick: @openFilter}, @state.data.column_headers[4].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[5].summary.type, onClick: @openFilter}, @state.data.column_headers[5].summary.value)),
+        (th {}, null),
+        (th {}, (a {href: "#", className: @state.data.column_headers[1].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[1])}, @state.data.column_headers[1].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[2].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[2])}, @state.data.column_headers[2].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[3].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[3])}, @state.data.column_headers[3].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[4].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[4])}, @state.data.column_headers[4].summary.value)),
+        (th {}, (a {href: "#", className: @state.data.column_headers[5].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[5])}, @state.data.column_headers[5].summary.value)),
         (th {}, (span {className: @state.data.column_headers[6].summary.type}, Currency({value: @state.data.column_headers[6].summary.value}))),
         (th {}, (span {className: @state.data.column_headers[7].summary.type}, @state.data.column_headers[7].summary.value)),
         (th {}, (span {className: @state.data.column_headers[8].summary.type}, @state.data.column_headers[8].summary.value)),
@@ -123,12 +131,17 @@ TableReport = React.createClass
         (td {}, (span {className: 'cell_wrap'}, Percentage({value: row.profitability})))
       ])
 
-    (table {className: "table table-striped table-condensed report_records", onClick: @filter}, [
-      (thead {}, [
-        (tr {className: "headers"}, column_headers),
-        (tr {className: "filters"}, filters)
-      ]),
-      (tbody {}, rows)
-    ])
+    (form {onSubmit: @commit}, [
+      (input {type: "hidden", onChange: @onFormChange, name: "daterange[from]", defaultValue: "2014-05-01"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "daterange[to]", defaultValue: "2014-07-17"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "order[by]", defaultValue: "date"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "order[direction]", defaultValue: "desc"}),
+      (table {className: "table table-striped table-condensed report_records", onClick: @filter}, [
+        (thead {}, [
+          (tr {className: "headers"}, column_headers),
+          (tr {className: "filters", 'data-no-turbolink':true}, filters)
+        ]),
+        (tbody {}, rows)
+    ])])
 
 React.renderComponent (TableReport {}), document.getElementById('table_report') if document.getElementById('table_report')

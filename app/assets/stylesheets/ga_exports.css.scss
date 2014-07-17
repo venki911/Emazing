@@ -81,6 +81,24 @@
 		}
 	}
 
+	div.popover-content {
+		max-height: 300px;
+		overflow: auto;
+
+		label {
+			display: block;
+			font-weight: normal;
+
+			span {
+				margin: 0 0 0 5px;
+			}
+
+			&:last-child {
+				margin: 0;
+			}
+		}
+	}
+
 	#table_report {
 		overflow-x: scroll;
 		width: 100%;
@@ -98,7 +116,7 @@
 				}
 
 				&.text_filter, &.date_filter {
-					cursor: not-allowed;
+					// cursor: not-allowed;
 				}
 			}
 

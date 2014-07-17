@@ -2,10 +2,14 @@ class GaExportsController < ApplicationController
   # GET /ga_exports
   # GET /ga_exports.json
   def index
-    @ga_records = GaRecord.with_calculated_attrs.sort_by(params[:order]).filter_by(params[:filter]).from_account(@current_ga_account)
+    @ga_records = GaRecord.with_calculated_attrs
+                          .sort_by(params[:order])
+                          .filter_by(params[:filter])
+                          .daterange(params[:daterange])
+                          .from_account(@current_ga_account)
 
     respond_to do |format|
-      format.html
+      format.html { @ga_records = nil }
       format.json
       format.xlsx do
         render xlsx: 'index', filename: "#{@current_ga_account.alias}-#{Date.current}.xlsx", disposition: 'attachment'

@@ -144,6 +144,14 @@ class GaRecord < ActiveRecord::Base
     order("#{params_order[:by]} #{params_order[:direction]}, #{secundary_order_column} #{params_order[:direction]}")
 	end
 
+	scope :daterange, -> (params_daterange) do
+		params_daterange ||= {}
+		params_daterange['from'] ||= 60.days.ago.to_date.to_s(:db)
+		params_daterange['to'] ||= Date.current.to_s(:db)
+
+		where("#{FORMULA[:date]} >= '#{params_daterange['from']}' AND #{FORMULA[:date]} <= '#{params_daterange['to']}'")
+	end
+
 	scope :from_account, -> (account) { where(ga_exports: {profile_id: account.profile_id}).joins(:ga_export) }
 
 end
