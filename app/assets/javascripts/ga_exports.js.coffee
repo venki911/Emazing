@@ -78,13 +78,13 @@ $(document).ready ->
   $("#report_daterange span").html startDate.format("MMMM D, YYYY") + " - " + endDate.format("MMMM D, YYYY")
   $('#report_daterange').daterangepicker options, on_daterange_change_update_label
 
-  $("#report_daterange").on "show.daterangepicker", ->
-    console.log "show event fired"
-    return
+  # $("#report_daterange").on "show.daterangepicker", ->
+  #   console.log "show event fired"
+  #   return
 
-  $("#report_daterange").on "hide.daterangepicker", ->
-    console.log "hide event fired"
-    return
+  # $("#report_daterange").on "hide.daterangepicker", ->
+  #   console.log "hide event fired"
+  #   return
 
   $("#report_daterange").on "apply.daterangepicker", (ev, picker) ->
     console.log picker.startDate.format("YYYY-MM-DD") + " to " + picker.endDate.format("YYYY-MM-DD")
