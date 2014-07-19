@@ -3,7 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $(document).ready ->
   on_daterange_change_update_label = (start, end, label) ->
-    console.log label
     if label != 'Po meri'
       $("#report_daterange span").html label
     else
