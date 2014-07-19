@@ -161,19 +161,11 @@ TableReport = React.createClass
 
     @loadReportFromServer()
 
-  openFilter: ->
-    return false;
-
   commit: (event) ->
     params = decodeURIComponent($('form').serialize())
     console.log params
     history.replaceState('string', 'title', location.origin + location.pathname + '?' + params)
     @loadReportFromServer()
-    return false
-
-  onFormChange: ->
-    console.log 'yep'
-    $('form').submit()
     return false
 
   changeDateRange: (daterange) ->
@@ -182,7 +174,6 @@ TableReport = React.createClass
         from: daterange.from
         to: daterange.to
         label: daterange.label
-    return
 
   generatePopoverFilter: (header) ->
     options = header.options.map ((option) ->
