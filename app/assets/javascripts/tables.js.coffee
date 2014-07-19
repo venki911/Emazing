@@ -118,8 +118,8 @@ TableReport = React.createClass
         to: moment().format("YYYY-MM-DD")
         label: 'Danes'
       order:
-        by: null
-        direction: null}
+        by: 'date'
+        direction: 'desc'}
 
   # getURL()
   # transaforms
@@ -154,7 +154,12 @@ TableReport = React.createClass
       direction = 'asc' if @state.order.direction == 'desc' && header.name == @state.order.by
       direction = 'desc' if @state.order.direction == 'asc' && header.name == @state.order.by
 
-    @loadReportFromServer({order: {by: header.name, direction: direction}})
+    @setState
+      order:
+        by: header.name
+        direction: direction
+
+    @loadReportFromServer()
 
   openFilter: ->
     return false;
