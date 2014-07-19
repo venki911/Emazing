@@ -1,4 +1,5 @@
 {a, table, thead, tr, tbody, th, td, span, form, input, select, label} = React.DOM
+{OverlayTrigger, Popover, Button} = ReactBootstrap
 
 Currency = React.createClass
   render: ->
@@ -79,7 +80,7 @@ TableReport = React.createClass
       (label {for: id}, [
         (input {type: 'checkbox', name: "filter[#{header.name}][]", id: id, defaultValue: option}),
         (span {}, option)])).bind(this)
-    React.renderComponentToString((span {}, options))
+    options
 
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
@@ -91,11 +92,21 @@ TableReport = React.createClass
     if @state.data.column_headers.length > 0
       filters = [
         (th {}, null),
-        (th {}, (a {href: "#", className: @state.data.column_headers[1].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[1])}, @state.data.column_headers[1].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[2].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[2])}, @state.data.column_headers[2].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[3].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[3])}, @state.data.column_headers[3].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[4].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[4])}, @state.data.column_headers[4].summary.value)),
-        (th {}, (a {href: "#", className: @state.data.column_headers[5].summary.type, onClick: @openFilter, 'data-content': @generatePopoverFilter(@state.data.column_headers[5])}, @state.data.column_headers[5].summary.value)),
+        (th {},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+            (Button {bsStyle: "link", className: @state.data.column_headers[1].summary.type}, @state.data.column_headers[1].summary.value))),
+        (th {},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+            (Button {bsStyle: "link", className: @state.data.column_headers[2].summary.type}, @state.data.column_headers[2].summary.value))),
+        (th {},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+            (Button {bsStyle: "link", className: @state.data.column_headers[3].summary.type}, @state.data.column_headers[3].summary.value))),
+        (th {},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+            (Button {bsStyle: "link", className: @state.data.column_headers[4].summary.type}, @state.data.column_headers[4].summary.value))),
+        (th {},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+            (Button {bsStyle: "link", className: @state.data.column_headers[5].summary.type}, @state.data.column_headers[5].summary.value))),
         (th {}, (span {className: @state.data.column_headers[6].summary.type}, Currency({value: @state.data.column_headers[6].summary.value}))),
         (th {}, (span {className: @state.data.column_headers[7].summary.type}, @state.data.column_headers[7].summary.value)),
         (th {}, (span {className: @state.data.column_headers[8].summary.type}, @state.data.column_headers[8].summary.value)),

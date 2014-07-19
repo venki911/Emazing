@@ -18,6 +18,7 @@
 //= require bootstrap/dist/js/bootstrap.min
 //= require chosen_v1.1.0/chosen.jquery.min
 //= require react-chosen/react-chosen.min
+//= require react-bootstrap/react-bootstrap.min
 //= require momentjs/moment
 //= require bootstrap-daterangepicker/daterangepicker
 //= require URI
