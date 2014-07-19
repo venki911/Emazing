@@ -1,4 +1,4 @@
-{a, table, thead, tr, tbody, th, td, span, form, input, select, label} = React.DOM
+{a, table, thead, tr, tbody, th, td, span, form, input, select, label, div, i, b} = React.DOM
 {OverlayTrigger, Popover, Button} = ReactBootstrap
 
 Currency = React.createClass
@@ -14,9 +14,109 @@ Percentage = React.createClass
     else
       (span {className: 'percentage no-value'}, 'n/a')
 
+DateRangePicker = React.createClass
+  displayName: 'DateRangePicker'
+  componentDidMount: ->
+    _this = this
+
+    options = 
+      opens: @props.opens
+      startDate: @props.startDate
+      endDate: @props.endDate
+      format: 'YYYY-MM-DD'
+      ranges:
+        Danes: [
+          moment()
+          moment()
+        ]
+        Včeraj: [
+          moment().subtract("days", 1)
+          moment().subtract("days", 1)
+        ]
+        "Zadnjih 7 dni": [
+          moment().subtract("days", 6)
+          moment()
+        ]
+        "Zadnjih 30 dni": [
+          moment().subtract("days", 29)
+          moment()
+        ]
+        "Ta mesec": [
+          moment().startOf("month")
+          moment().endOf("month")
+        ]
+        "Prejšnji mesec": [
+          moment().subtract("month", 1).startOf("month")
+          moment().subtract("month", 1).endOf("month")
+        ]
+      locale:
+        applyLabel: "Potrdi"
+        cancelLabel: "Prekliči"
+        fromLabel: "Od"
+        toLabel: "Do"
+        customRangeLabel: "Po meri"
+        daysOfWeek: [
+          "Ned"
+          "Pon"
+          "Tor"
+          "Sre"
+          "Čet"
+          "Pet"
+          "Sob"
+        ]
+        monthNames: [
+          "Januar"
+          "Februar"
+          "Marec"
+          "April"
+          "Maj"
+          "Junij"
+          "Julij"
+          "Avgust"
+          "September"
+          "Oktober"
+          "November"
+          "December"
+        ]
+        firstDay: 1
+
+    $("#" + @props.id).daterangepicker(options)
+
+    $("#" + @props.id).on "apply.daterangepicker", (event, picker) ->
+      _this.handleApply(picker)
+  handleApply: (picker) ->
+    daterange_label = picker.chosenLabel
+    if picker.chosenLabel == 'Po meri'
+      daterange_label = "#{moment(@props.startDate, 'YYYY-MM-DD').format("MMMM D, YYYY")} - #{moment(@props.endDate, 'YYYY-MM-DD').format("MMMM D, YYYY")}"
+
+    @props.onChangeDateRange
+      from: picker.startDate.format("YYYY-MM-DD")
+      to: picker.endDate.format("YYYY-MM-DD")
+      label: daterange_label
+  render: ->
+    (div {className: 'daterangepicker_trigger btn', id: @props.id}, [
+      (i {className: 'glyphicon glyphicon-calendar fa fa-calendar'}, null),
+      (span {}, @props.label),
+      (b {className: 'caret'})])
+
 TableReport = React.createClass
   getInitialState: ->
-    { data: column_headers: [], rows: [] }
+    { data:
+        column_headers: [],
+        rows: []
+      filters:
+        source: []
+        campaign: []
+        medium: []
+        ad_content: []
+        keyword: []
+      daterange:
+        from: moment().format("YYYY-MM-DD")
+        to: moment().format("YYYY-MM-DD")
+        label: 'Danes'
+      order:
+        by: null
+        direction: null}
 
   # getURL()
   # transaforms
@@ -26,36 +126,30 @@ TableReport = React.createClass
   getURL: (params) ->
     "#{location.pathname}.json#{location.search}"
 
-  loadReportFromServer: (params) ->
+  loadReportFromServer: ->
     $.ajax
       url: @getURL()
       dataType: 'json'
       success: ((data) ->
         @setState
           data: data
-          query: params
-
-        $('.text_filter').popover
-          placement: 'bottom'
-          html: true
-
       ).bind(this)
       error: ((xhr, status, error) ->
         alert(status)
       ).bind(this)
 
   componentWillMount: ->
-    @loadReportFromServer({order: {by: 'date', direction: 'desc'}})
+    @loadReportFromServer()
 
   toggleSort: (header) ->
     if header.summary.type == 'text_filter'
       direction = 'asc'
-      direction = 'asc' if @state.query.order.direction == 'desc' && header.name == @state.query.order.by
-      direction = 'desc' if @state.query.order.direction == 'asc' && header.name == @state.query.order.by
+      direction = 'asc' if @state.order.direction == 'desc' && header.name == @state.order.by
+      direction = 'desc' if @state.order.direction == 'asc' && header.name == @state.order.by
     else
       direction = 'desc'
-      direction = 'asc' if @state.query.order.direction == 'desc' && header.name == @state.query.order.by
-      direction = 'desc' if @state.query.order.direction == 'asc' && header.name == @state.query.order.by
+      direction = 'asc' if @state.order.direction == 'desc' && header.name == @state.order.by
+      direction = 'desc' if @state.order.direction == 'asc' && header.name == @state.order.by
 
     @loadReportFromServer({order: {by: header.name, direction: direction}})
 
@@ -66,13 +160,21 @@ TableReport = React.createClass
     params = decodeURIComponent($('form').serialize())
     console.log params
     history.replaceState('string', 'title', location.origin + location.pathname + '?' + params)
-    @loadReportFromServer({order: {by: 'date', direction: 'desc'}})
+    @loadReportFromServer()
     return false
 
   onFormChange: ->
     console.log 'yep'
     $('form').submit()
     return false
+
+  changeDateRange: (daterange) ->
+    @setState
+      daterange:
+        from: daterange.from
+        to: daterange.to
+        label: daterange.label
+    return
 
   generatePopoverFilter: (header) ->
     options = header.options.map ((option) ->
@@ -85,8 +187,8 @@ TableReport = React.createClass
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
       class_name = 'sorting'
-      class_name = "sorting_desc" if header.name == @state.query.order.by && @state.query.order.direction == 'desc'
-      class_name = "sorting_asc" if header.name == @state.query.order.by && @state.query.order.direction == 'asc'
+      class_name = "sorting_desc" if header.name == @state.order.by && @state.order.direction == 'desc'
+      class_name = "sorting_asc" if header.name == @state.order.by && @state.order.direction == 'asc'
       (th {className: class_name, 'data-column-name': header.name}, (span {onClick: @toggleSort.bind(this, header)}, header.title))).bind(this)
 
     if @state.data.column_headers.length > 0
@@ -96,16 +198,16 @@ TableReport = React.createClass
           (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
             (Button {bsStyle: "link", className: @state.data.column_headers[1].summary.type}, @state.data.column_headers[1].summary.value))),
         (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[2]))},
             (Button {bsStyle: "link", className: @state.data.column_headers[2].summary.type}, @state.data.column_headers[2].summary.value))),
         (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[3]))},
             (Button {bsStyle: "link", className: @state.data.column_headers[3].summary.type}, @state.data.column_headers[3].summary.value))),
         (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[4]))},
             (Button {bsStyle: "link", className: @state.data.column_headers[4].summary.type}, @state.data.column_headers[4].summary.value))),
         (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
+          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[5]))},
             (Button {bsStyle: "link", className: @state.data.column_headers[5].summary.type}, @state.data.column_headers[5].summary.value))),
         (th {}, (span {className: @state.data.column_headers[6].summary.type}, Currency({value: @state.data.column_headers[6].summary.value}))),
         (th {}, (span {className: @state.data.column_headers[7].summary.type}, @state.data.column_headers[7].summary.value)),
@@ -143,6 +245,7 @@ TableReport = React.createClass
       ])
 
     (form {onSubmit: @commit}, [
+      (DateRangePicker {id: 'report_daterangepicker_trigger', startDate: this.state.daterange.from, endDate: this.state.daterange.to, label: this.state.daterange.label, opens: 'left', onChangeDateRange: @changeDateRange}),
       (input {type: "hidden", onChange: @onFormChange, name: "daterange[from]", defaultValue: "2014-05-01"}),
       (input {type: "hidden", onChange: @onFormChange, name: "daterange[to]", defaultValue: "2014-07-17"}),
       (input {type: "hidden", onChange: @onFormChange, name: "order[by]", defaultValue: "date"}),

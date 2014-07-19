@@ -22,23 +22,23 @@
 			line-height: 32px;
 		}
 
-		#report_daterange {
-			position: absolute;
-			right: 0;
-			top: -4px;
-			display: inline-block;
-			background: #fff;
-			cursor: pointer;
-			padding: 5px 10px;
-			border: 1px solid #ccc;
-
-			.glyphicon-calendar {
-				font-size: 12px;
-			}
-		}
-
 		.report_export_to_xlsx {
 			position: relative;
+		}
+	}
+
+	#report_daterangepicker_trigger {
+		position: absolute;
+		right: 40px;
+		top: 68px;
+		display: inline-block;
+		background: #FFF;
+		cursor: pointer;
+		padding: 5px 10px;
+		border: 1px solid #CCC;
+
+		.glyphicon-calendar {
+			font-size: 12px;
 		}
 	}
 
