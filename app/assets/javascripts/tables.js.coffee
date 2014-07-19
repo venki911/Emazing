@@ -2,12 +2,14 @@
 {OverlayTrigger, Popover, Button} = ReactBootstrap
 
 Currency = React.createClass
+  displayName: 'Currency'
   render: ->
     (span {className: 'currency'},
       (span {className: 'unit'}, '€ '),
       (span {className: 'number'}, parseFloat(@props.value).toFixed(2) if @props.value))
 
 Percentage = React.createClass
+  displayName: 'Percentage'
   render: ->
     if @props.value
       (span {className: 'percentage'}, "#{@props.value}%")
@@ -100,6 +102,7 @@ DateRangePicker = React.createClass
       (b {className: 'caret'})])
 
 TableReport = React.createClass
+  displayName: 'TableReport'
   getInitialState: ->
     { data:
         column_headers: [],
