@@ -165,8 +165,6 @@ TableReport = React.createClass
     @state.filter.keyword.map (value) ->
       params.push("filter[keyword][]=#{value}")
 
-    console.log params
-
     json_url = "#{location.pathname}.json?#{params.join('&')}"
     url = "#{location.pathname}?#{params.join('&')}"
 
@@ -178,7 +176,6 @@ TableReport = React.createClass
       url: url || @getURL()
       dataType: 'json'
       success: ((response) ->
-        console.log response
         @setState
           data: response.data
           order: response.params.order
@@ -223,7 +220,6 @@ TableReport = React.createClass
     @loadReportFromServer()
 
   handleFilterChange: (event) ->
-    console.log event.target.value
     name = event.target.name.replace('filter[', '').replace('][]', '')
     value = event.target.value
     checked = event.target.checked
