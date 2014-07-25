@@ -1,50 +1,40 @@
 json.cache! [@ga_records.map(&:id), params] do
-	json.column_headers do
-		summaries = GaRecord.summaries(@ga_records)
-
-		json.array!(GaRecord::COLUMN_HEADERS) do |header|
-			json.title header.last[:title]
-			json.name header.first.to_s
-			json.summary do
-				json.type summaries[header.first][:type]
-				json.value summaries[header.first][:value]
-			end
-			json.options @ga_records.map {|record| record.send(header.first)}.uniq
+	json.params do
+		json.order params[:order]
+		json.filter do
+			params[:filter] ||= {}
+			
+			json.source params[:filter][:source] || []
+			json.campaign params[:filter][:campaign] || []
+			json.medium params[:filter][:medium] || []
+			json.ad_content params[:filter][:ad_content] || []
+			json.keyword params[:filter][:keyword] || []
 		end
+		json.daterange params[:daterange]
 	end
+	json.data do
+		json.column_headers do
+			summaries = GaRecord.summaries(@ga_records)
 
-	json.rows do
-		column_headers = GaRecord.column_headers
+			json.array!(GaRecord::COLUMN_HEADERS) do |header|
+				json.title header.last[:title]
+				json.name header.first.to_s
+				json.summary do
+					json.type summaries[header.first][:type]
+					json.value summaries[header.first][:value]
+				end
+				json.options GaRecord.with_calculated_attrs.from_account(@current_ga_account).map {|record| record.send(header.first)}.uniq
+			end
+		end
 
-		json.array!(@ga_records) do |ga_record|
-			# hide non-emazing data
-			# if ga_record.source == 'emazing'
-			# 	ga_record.column_headers.each do |column|
-			# 		value = ga_record.send(column)
-			# 		if value.class == BigDecimal
-			# 			json.set! column, number_to_currency(value)
-			# 		else
-			# 			json.set! column, value
-			# 		end
-			# 	end
-			# else
-			# 	ga_record.column_headers.each do |column|
-			# 		if [:ad_cost, :ad_clicks, :sessions, :revenue, :profit, :profitability].include?(column)
-			# 			json.set! column, ""
-			# 		else
-			# 			value = ga_record.send(column)
-			# 			if value.class == BigDecimal
-			# 				json.set! column, number_to_currency(value)
-			# 			else
-			# 				json.set! column, value
-			# 			end
-			# 		end
-			# 	end
-			# end
+		json.rows do
+			column_headers = GaRecord.column_headers
 
-			column_headers.each do |column|
-				value = ga_record.send(column)
-				json.set! column, value
+			json.array!(@ga_records) do |ga_record|
+				column_headers.each do |column|
+					value = ga_record.send(column)
+					json.set! column, value
+				end
 			end
 		end
 	end

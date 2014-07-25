@@ -6,7 +6,7 @@ Currency = React.createClass
   render: ->
     (span {className: 'currency'},
       (span {className: 'unit'}, '€ '),
-      (span {className: 'number'}, parseFloat(@props.value).toFixed(2) if @props.value))
+      (span {className: 'number'}, parseFloat(@props.value).toFixed(2) unless @props.value == null))
 
 Percentage = React.createClass
   displayName: 'Percentage'
@@ -43,13 +43,9 @@ DateRangePicker = React.createClass
           moment().subtract("days", 29)
           moment()
         ]
-        "Ta mesec": [
-          moment().startOf("month")
-          moment().endOf("month")
-        ]
-        "Prejšnji mesec": [
-          moment().subtract("month", 1).startOf("month")
-          moment().subtract("month", 1).endOf("month")
+        "Zadnjih 90 dni": [
+          moment().subtract("days", 89)
+          moment()
         ]
       locale:
         applyLabel: "Potrdi"
@@ -89,7 +85,7 @@ DateRangePicker = React.createClass
   handleApply: (picker) ->
     daterange_label = picker.chosenLabel
     if picker.chosenLabel == 'Po meri'
-      daterange_label = "#{moment(@props.startDate, 'YYYY-MM-DD').format("MMMM D, YYYY")} - #{moment(@props.endDate, 'YYYY-MM-DD').format("MMMM D, YYYY")}"
+      daterange_label = "#{moment(picker.startDate, 'YYYY-MM-DD').format("MMMM D, YYYY")} - #{moment(picker.endDate, 'YYYY-MM-DD').format("MMMM D, YYYY")}"
 
     @props.onChangeDateRange
       from: picker.startDate.format("YYYY-MM-DD")
@@ -101,48 +97,102 @@ DateRangePicker = React.createClass
       (span {}, @props.label),
       (b {className: 'caret'})])
 
+Filter = React.createClass
+  displayName: 'Filter'
+  handleRemoveFilters: ->
+    @props.onRemoveFilters(@props.column_header.name)
+    return false
+  render: ->
+    options = @props.column_header.options.map ((option_value) ->
+      id = "filter_#{@props.column_header.name}_#{option_value}"
+      if $.inArray(option_value, @props.selected_options) > -1
+        defaultChecked = true
+      else
+        defaultChecked = false
+      (label {for: id}, [
+        (input {type: 'checkbox', name: "filter[#{@props.column_header.name}][]", id: id, value: option_value, defaultChecked: defaultChecked, onChange: @props.onFilterChange}),
+        (span {}, option_value)])).bind(this)
+
+    if @props.selected_options.length > 0
+      remove_button = (Button {bsStyle: "link", className: 'remove_filters glyphicon glyphicon-remove', onClick: @handleRemoveFilters})
+    else
+      remove_button = null
+
+    (span {}, [
+      (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, options)},
+        (Button {bsStyle: "link", className: "show_filters #{@props.column_header.summary.type}"}, @props.column_header.summary.value)),
+        remove_button])
+
 TableReport = React.createClass
   displayName: 'TableReport'
   getInitialState: ->
     { data:
         column_headers: [],
         rows: []
-      filters:
-        source: []
+      filter:
+        source: ['emazing']
         campaign: []
         medium: []
         ad_content: []
         keyword: []
       daterange:
-        from: moment().format("YYYY-MM-DD")
+        from: moment().subtract('days', 89).format("YYYY-MM-DD")
         to: moment().format("YYYY-MM-DD")
-        label: 'Danes'
+        label: 'Zadnjih 90 dni'
       order:
         by: 'date'
         direction: 'desc'}
 
-  # getURL()
-  # transaforms
-  #   url_query: { order: { by: 'source', direction: 'asc' }, filter: { source: ['emazing', 'google'], medium: ['facebook'] } }
-  # to
-  #   "/ga_exports.json?order[by]=source&order[direction]=asc&filter[source][]=emazing&filter[source][]=google&filter[medium][]=facebook"
-  getURL: (params) ->
-    "#{location.pathname}.json#{location.search}"
+  getURL: ->
+    params = ["order[by]=#{@state.order.by}",
+              "order[direction]=#{@state.order.direction}",
+              "daterange[from]=#{@state.daterange.from}",
+              "daterange[to]=#{@state.daterange.to}",
+              "daterange[label]=#{@state.daterange.label}"]
 
-  loadReportFromServer: ->
+    @state.filter.source.map (value) ->
+      params.push("filter[source][]=#{value}")
+
+    @state.filter.campaign.map (value) ->
+      params.push("filter[campaign][]=#{value}")
+
+    @state.filter.medium.map (value) ->
+      params.push("filter[medium][]=#{value}")
+
+    @state.filter.ad_content.map (value) ->
+      params.push("filter[ad_content][]=#{value}")
+
+    @state.filter.keyword.map (value) ->
+      params.push("filter[keyword][]=#{value}")
+
+    console.log params
+
+    json_url = "#{location.pathname}.json?#{params.join('&')}"
+    url = "#{location.pathname}?#{params.join('&')}"
+
+    history.replaceState(null, null, url);
+    return json_url
+
+  loadReportFromServer: (url) ->
     $.ajax
-      url: @getURL()
+      url: url || @getURL()
       dataType: 'json'
-      success: ((data) ->
+      success: ((response) ->
+        console.log response
         @setState
-          data: data
+          data: response.data
+          order: response.params.order
+          daterange: response.params.daterange
+          filter: response.params.filter
       ).bind(this)
       error: ((xhr, status, error) ->
         alert(status)
       ).bind(this)
 
   componentWillMount: ->
-    @loadReportFromServer()
+    unless location.search == ""
+      url = "#{location.pathname}.json#{location.search}"
+    @loadReportFromServer(url)
 
   toggleSort: (header) ->
     if header.summary.type == 'text_filter'
@@ -154,34 +204,46 @@ TableReport = React.createClass
       direction = 'asc' if @state.order.direction == 'desc' && header.name == @state.order.by
       direction = 'desc' if @state.order.direction == 'asc' && header.name == @state.order.by
 
-    @setState
-      order:
-        by: header.name
-        direction: direction
+    new_state = @state
+    new_state.order =
+      by: header.name
+      direction: direction
 
+    @setState new_state
     @loadReportFromServer()
-
-  commit: (event) ->
-    params = decodeURIComponent($('form').serialize())
-    console.log params
-    history.replaceState('string', 'title', location.origin + location.pathname + '?' + params)
-    @loadReportFromServer()
-    return false
 
   changeDateRange: (daterange) ->
-    @setState
+    new_daterange_state =
       daterange:
         from: daterange.from
         to: daterange.to
         label: daterange.label
 
-  generatePopoverFilter: (header) ->
-    options = header.options.map ((option) ->
-      id = "filter_#{header.name}_#{option}"
-      (label {for: id}, [
-        (input {type: 'checkbox', name: "filter[#{header.name}][]", id: id, defaultValue: option}),
-        (span {}, option)])).bind(this)
-    options
+    @setState new_daterange_state
+    @loadReportFromServer()
+
+  handleFilterChange: (event) ->
+    console.log event.target.value
+    name = event.target.name.replace('filter[', '').replace('][]', '')
+    value = event.target.value
+    checked = event.target.checked
+    new_state = @state
+
+    if checked
+      new_state['filter'][name].push(value)
+    else
+      new_state['filter'][name] = $.grep new_state['filter'][name], (element) ->
+        element != value
+
+    @setState new_state
+    @loadReportFromServer()  
+
+  handleRemoveFilters: (header_name) ->
+    new_state = @state
+    new_state['filter'][header_name] = []
+
+    @setState new_state
+    @loadReportFromServer()  
 
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
@@ -193,21 +255,11 @@ TableReport = React.createClass
     if @state.data.column_headers.length > 0
       filters = [
         (th {}, null),
-        (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[1]))},
-            (Button {bsStyle: "link", className: @state.data.column_headers[1].summary.type}, @state.data.column_headers[1].summary.value))),
-        (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[2]))},
-            (Button {bsStyle: "link", className: @state.data.column_headers[2].summary.type}, @state.data.column_headers[2].summary.value))),
-        (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[3]))},
-            (Button {bsStyle: "link", className: @state.data.column_headers[3].summary.type}, @state.data.column_headers[3].summary.value))),
-        (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[4]))},
-            (Button {bsStyle: "link", className: @state.data.column_headers[4].summary.type}, @state.data.column_headers[4].summary.value))),
-        (th {},
-          (OverlayTrigger {trigger: "click", placement: "bottom", overlay: (Popover {}, @generatePopoverFilter(@state.data.column_headers[5]))},
-            (Button {bsStyle: "link", className: @state.data.column_headers[5].summary.type}, @state.data.column_headers[5].summary.value))),
+        (th {}, (Filter {column_header: @state.data.column_headers[1], selected_options: @state.filter[@state.data.column_headers[1].name], onFilterChange: @handleFilterChange, onRemoveFilters: @handleRemoveFilters})),
+        (th {}, (Filter {column_header: @state.data.column_headers[2], selected_options: @state.filter[@state.data.column_headers[2].name], onFilterChange: @handleFilterChange, onRemoveFilters: @handleRemoveFilters})),
+        (th {}, (Filter {column_header: @state.data.column_headers[3], selected_options: @state.filter[@state.data.column_headers[3].name], onFilterChange: @handleFilterChange, onRemoveFilters: @handleRemoveFilters})),
+        (th {}, (Filter {column_header: @state.data.column_headers[4], selected_options: @state.filter[@state.data.column_headers[4].name], onFilterChange: @handleFilterChange, onRemoveFilters: @handleRemoveFilters})),
+        (th {}, (Filter {column_header: @state.data.column_headers[5], selected_options: @state.filter[@state.data.column_headers[5].name], onFilterChange: @handleFilterChange, onRemoveFilters: @handleRemoveFilters})),
         (th {}, (span {className: @state.data.column_headers[6].summary.type}, Currency({value: @state.data.column_headers[6].summary.value}))),
         (th {}, (span {className: @state.data.column_headers[7].summary.type}, @state.data.column_headers[7].summary.value)),
         (th {}, (span {className: @state.data.column_headers[8].summary.type}, @state.data.column_headers[8].summary.value)),
@@ -243,7 +295,7 @@ TableReport = React.createClass
         (td {}, (span {className: 'cell_wrap'}, Percentage({value: row.profitability})))
       ])
 
-    (form {onSubmit: @commit}, [
+    (form {}, [
       (DateRangePicker {id: 'report_daterangepicker_trigger', startDate: this.state.daterange.from, endDate: this.state.daterange.to, label: this.state.daterange.label, opens: 'left', onChangeDateRange: @changeDateRange}),
       (input {type: "hidden", onChange: @onFormChange, name: "daterange[from]", defaultValue: "2014-05-01"}),
       (input {type: "hidden", onChange: @onFormChange, name: "daterange[to]", defaultValue: "2014-07-17"}),
