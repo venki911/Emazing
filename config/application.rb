@@ -22,5 +22,6 @@ module Emazing
 
     config.autoload_paths += Dir["#{config.root}/lib"]
     config.assets.paths << Rails.root.join("vendor", "assets", "bower_components")
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
   end
 end
