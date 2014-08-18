@@ -19,7 +19,7 @@ set :output, "/home/deployer/apps/emazing/shared/log/cron.log"
 
 Time.zone = 'Ljubljana'
 
-every :day, at: Time.zone.parse("2:30 am").localtime do
+every :day, at: Time.zone.parse("9:30 am").localtime do
 	rake "fb:download_csv"
 end
 
