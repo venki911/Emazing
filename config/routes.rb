@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  get 'reports/index'
+
   resources :csv_reports, only: [:index]
 
   resources :ga_exports, path: 'porocilo'
+  resources :reports, path: 'facebook-porocila'
 
   root "pages#index"
   get "/fb-url-builder" => "builder#new", as: :fb_url_builder

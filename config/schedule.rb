@@ -23,10 +23,6 @@ every :day, at: Time.zone.parse("2:30 am").localtime do
 	rake "fb:download_csv"
 end
 
-every :day, at: Time.zone.parse("2:45 am").localtime do
-	rake "fb:save_csv"
-end
-
 every :day, at: Time.zone.parse("3 am").localtime do
 	rake "ga:upload_data"
 end

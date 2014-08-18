@@ -18,6 +18,6 @@ class GaExport < ActiveRecord::Base
       self.ga_records.build(data: data)
     end
 
-    self.save
+    self.save!
 	end
 end
