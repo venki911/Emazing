@@ -94,6 +94,14 @@ class Record < ActiveRecord::Base
 		select "records.id, " + REPORT_FIELDS[report_tag].map {|field_name| "#{FIELD[field_name][:formula]} as #{field_name}"}.join(', ')
 	end
 
+	scope :sort_by, -> (params_order) do
+		params_order ||= {}
+    params_order[:by] ||= 'start_date'
+    params_order[:direction] ||= 'desc'
+
+    order("#{params_order[:by]} #{params_order[:direction]}, records.id #{params_order[:direction]}")
+	end
+
 	def self.fields
 		Record::FIELD.map(&:first)
 	end
