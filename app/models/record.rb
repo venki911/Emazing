@@ -37,10 +37,10 @@ class Record < ActiveRecord::Base
 	FIELD[:cost_per_page_engagement_eur] = {formula: "(data -> 'cost_per_page_engagement_eur')::float", type: 'currency'}
 	FIELD[:cost_per_post_engagement_eur] = {formula: "(data -> 'cost_per_post_engagement_eur')::float", type: 'currency'}
 	FIELD[:cost_per_app_installation_eur] = {formula: "(data -> 'cost_per_app_installation_eur')::float", type: 'currency'}
-	FIELD[:cost_per1000_people_reached_eur] = {formula: "(data -> 'cost_per1000_people_reached_eur')::float", type: 'currency'}
+	FIELD[:cost_per_1000_people_reached_eur] = {formula: "(data -> 'cost_per_1000_people_reached_eur')::float", type: 'currency'}
 	FIELD[:cost_per_website_conversion_eur] = {formula: "(data -> 'cost_per_website_conversion_eur')::float", type: 'currency'}
 	FIELD[:unique_click_through_rate_u_ctr] = {formula: "(data -> 'unique_click_through_rate_u_ctr')::float", type: 'percentage'}
-	FIELD[:cost_per1000_impressions_cpm_eur] = {formula: "(data -> 'cost_per1000_impressions_cpm_eur')::float", type: 'currency'}
+	FIELD[:cost_per_1000_impressions_cpm_eur] = {formula: "(data -> 'cost_per_1000_impressions_cpm_eur')::float", type: 'currency'}
 	FIELD[:cost_per_checkout_conversion_eur] = {formula: "(data -> 'cost_per_checkout_conversion_eur')::float", type: 'currency'}
 	FIELD[:cost_per_mobile_app_installation_eur] = {formula: "(data -> 'cost_per_mobile_app_installation_eur')::float", type: 'currency'}
 
@@ -52,7 +52,7 @@ class Record < ActiveRecord::Base
 			:spend_eur,
 			:reach,
 			:frequency,
-			:cost_per1000_people_reached_eur,
+			:cost_per_1000_people_reached_eur,
 			:clicks,
 			:unique_clicks,
 			:click_through_rate_ctr,
@@ -66,7 +66,7 @@ class Record < ActiveRecord::Base
 			:age,
 			:gender,
 			:impressions,
-			:cost_per1000_impressions_cpm_eur,
+			:cost_per_1000_impressions_cpm_eur,
 			:cost_per_unique_click_eur,
 			:website_conversion,
 			:leads_conversion,
