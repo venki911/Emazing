@@ -11,7 +11,7 @@ namespace :fb do
 		script = Rails.root.join('lib', 'tasks', 'download_csv_report.js')
 
 		# download from facebook
-		output = `casperjs --web-security=no --facebook-username=#{username} --facebook-password=#{password} --facebook-ads-account-id=#{facebook_ads_account_id} --facebook-report-tag=#{facebook_report_tag} --temp-csv-path=#{temp_csv_path} #{script}`
+		output = `/usr/local/bin/casperjs --web-security=no --facebook-username=#{username} --facebook-password=#{password} --facebook-ads-account-id=#{facebook_ads_account_id} --facebook-report-tag=#{facebook_report_tag} --temp-csv-path=#{temp_csv_path} #{script}`
 		puts output
 
 		# save to database
