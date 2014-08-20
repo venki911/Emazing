@@ -12,9 +12,17 @@ Percentage = React.createClass
   displayName: 'Percentage'
   render: ->
     if @props.value
-      (span {className: 'percentage'}, "#{@props.value}%")
+      (span {className: 'percentage'}, "#{parseFloat(@props.value).toFixed(3)}%")
     else
       (span {className: 'percentage no-value'}, 'n/a')
+
+Float = React.createClass
+  displayName: 'Float'
+  render: ->
+    if @props.value
+      (span {className: 'float'}, parseFloat(@props.value).toFixed(2))
+    else
+      (span {className: 'float no-value'}, 'n/a')
 
 DateRangePicker = React.createClass
   displayName: 'DateRangePicker'
@@ -123,8 +131,8 @@ Filter = React.createClass
         (Button {bsStyle: "link", className: "show_filters #{@props.column_header.summary.type}"}, @props.column_header.summary.value)),
         remove_button])
 
-TableReport = React.createClass
-  displayName: 'TableReport'
+GaReport = React.createClass
+  displayName: 'GaReport'
   getInitialState: ->
     { data:
         column_headers: [],
@@ -244,8 +252,8 @@ TableReport = React.createClass
   render: ->
     column_headers = @state.data.column_headers.map ((header) ->
       class_name = 'sorting'
-      class_name = "sorting_desc" if header.name == @state.order.by && @state.order.direction == 'desc'
-      class_name = "sorting_asc" if header.name == @state.order.by && @state.order.direction == 'asc'
+      # class_name = "sorting_desc" if header.name == @state.order.by && @state.order.direction == 'desc'
+      # class_name = "sorting_asc" if header.name == @state.order.by && @state.order.direction == 'asc'
       (th {className: class_name, 'data-column-name': header.name}, (span {onClick: @toggleSort.bind(this, header)}, header.title))).bind(this)
 
     if @state.data.column_headers.length > 0
@@ -305,4 +313,86 @@ TableReport = React.createClass
         (tbody {}, rows)
     ])])
 
+React.renderComponent (GaReport {}), document.getElementById('ga_report') if document.getElementById('ga_report')
+
+TableReport = React.createClass
+  displayName: 'TableReport'
+  getInitialState: ->
+    { data:
+        column_headers: [],
+        rows: []
+      filter:
+        source: ['emazing']
+        campaign: []
+        medium: []
+        ad_content: []
+        keyword: []
+      daterange:
+        from: moment().subtract('days', 89).format("YYYY-MM-DD")
+        to: moment().format("YYYY-MM-DD")
+        label: 'Zadnjih 90 dni'
+      order:
+        by: 'date'
+        direction: 'desc'}
+  loadReportFromServer: (url) ->
+    $.ajax
+      url: url || @getURL()
+      dataType: 'json'
+      success: ((response) ->
+        @setState
+          data: response.data
+      ).bind(this)
+      error: ((xhr, status, error) ->
+        alert(status)
+      ).bind(this)
+
+  componentWillMount: ->
+    # unless location.search == ""
+      # url = "#{location.pathname}.json#{location.search}"
+    url = "#{location.pathname}.json"
+    @loadReportFromServer(url)
+  render: ->
+    _this = this
+    column_headers = @state.data.column_headers.map ((column_header) ->
+      class_name = 'sorting'
+      # class_name = "sorting_desc" if column_header.name == @state.order.by && @state.order.direction == 'desc'
+      # class_name = "sorting_asc" if column_header.name == @state.order.by && @state.order.direction == 'asc'
+      (th {className: class_name, 'data-column-header-name': column_header.name}, (span {}, column_header.title))).bind(this)
+
+    rows = @state.data.rows.map (row) ->
+      class_name = ''
+
+      fields = _this.state.data.column_headers.map ((column_header) ->
+        value = row[column_header.name]
+
+        switch column_header.type
+          when 'currency'
+            cell = (Currency {value: value})
+          when 'percentage'
+            cell = (Percentage {value: value})
+          when 'float'
+            cell = (Float {value: value})
+          when 'date', 'string', 'integer'
+            cell = value
+
+        (td {title: value},
+          (span {className: 'cell_wrap'},
+            cell)))
+
+      (tr {className:class_name}, fields)
+
+    (form {}, [
+      (input {type: "hidden", onChange: @onFormChange, name: "daterange[from]", defaultValue: "2014-05-01"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "daterange[to]", defaultValue: "2014-07-17"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "order[by]", defaultValue: "start_date"}),
+      (input {type: "hidden", onChange: @onFormChange, name: "order[direction]", defaultValue: "desc"}),
+      (table {className: "table table-striped table-condensed report_records", onClick: @filter}, [
+        (thead {}, [
+          (tr {className: "headers"}, column_headers),
+        ]),
+        (tbody {}, rows)
+    ])])
+
 React.renderComponent (TableReport {}), document.getElementById('table_report') if document.getElementById('table_report')
+
+

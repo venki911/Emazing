@@ -1,0 +1,136 @@
+.table.report_records {
+	td, th {
+		font-size: 13px;
+		white-space: nowrap;
+		padding-left: 13px;
+	}
+
+	td {
+		span.cell_wrap {
+			width: 100px;
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			word-wrap: normal;
+		}
+
+		.no-value {
+			color: #ccc;
+		}
+	}
+
+	tr td:first-child, tr th:first-child {
+		padding-left: 40px;
+	}
+}
+
+#table_report {
+	overflow-x: scroll;
+	width: 100%;
+
+	tr.filters {
+		button {
+			font-weight: normal;
+			font-size: 12px;
+			color: #9C9C9C;
+			padding: 0;
+			line-height: initial;
+
+			&:hover {
+				text-decoration: none;
+				color: #428BCA;
+			}
+
+			&.text_filter, &.date_filter {
+				// cursor: not-allowed;
+			}
+		}
+
+		button.show_filters {
+			border-bottom: 1px dotted #9C9C9C;
+		}
+
+		.remove_filters {
+			font-size: 11px;
+			margin: -3px 0 0 3px;
+			color: #bbb;
+
+			&:hover {
+				color: #666;
+			}
+		}
+
+		span {
+			font-weight: normal;
+		}
+
+		th {
+			border-bottom: 6px solid #DDD;
+			background: #F1F1F1;
+		}
+	}
+
+	tr.headers {
+		th {
+			text-transform: uppercase;
+			font-family: Verdana;
+			font-size: 10px;
+			// font-weight: normal;
+
+			&.sorting, &.sorting_desc, &.sorting_asc {
+				span { cursor: pointer; }
+
+				&:first-child {
+					background-position: 24px center;
+				}
+			}
+
+			&.sorting {
+				background: image-url("sort_both.png") no-repeat -4px center;
+			}
+
+			&.sorting_desc {
+				background: image-url("sort_desc.png") no-repeat -4px center;
+			}
+
+			&.sorting_asc {
+				background: image-url("sort_asc.png") no-repeat -4px center;
+			}
+		}
+	}
+}
+
+.table > thead > tr > .danger, .table > thead > .danger > td, .table > thead > .danger > th, .table > tbody > tr > .danger, .table > tbody > .danger > td, .table > tbody > .danger > th, .table > tfoot > tr > .danger, .table > tfoot > .danger > td, .table > tfoot > .danger > th {
+	background-color: #F2DEDE !important;
+}
+
+.table>thead>tr>td.info,
+.table>tbody>tr>td.info,
+.table>tfoot>tr>td.info,
+.table>thead>tr>th.info,
+.table>tbody>tr>th.info,
+.table>tfoot>tr>th.info,
+.table>thead>tr.info>td,
+.table>tbody>tr.info>td,
+.table>tfoot>tr.info>td,
+.table>thead>tr.info>th,
+.table>tbody>tr.info>th,
+.table>tfoot>tr.info>th {
+	background-color: #D9EDF7;
+}
+
+.table>thead>tr>td.success,
+.table>tbody>tr>td.success,
+.table>tfoot>tr>td.success,
+.table>thead>tr>th.success,
+.table>tbody>tr>th.success,
+.table>tfoot>tr>th.success,
+.table>thead>tr.success>td,
+.table>tbody>tr.success>td,
+.table>tfoot>tr.success>td,
+.table>thead>tr.success>th,
+.table>tbody>tr.success>th,
+.table>tfoot>tr.success>th {
+	background-color: #DFF0D8;
+}

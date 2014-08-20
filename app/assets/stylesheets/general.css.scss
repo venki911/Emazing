@@ -53,3 +53,21 @@ h4 {
 		font-size: 12px;
 	}
 }
+
+header {
+	margin: 0 40px 40px;
+	position: relative;
+
+	h3 {
+		line-height: 32px;
+	}
+
+	.report_export_to_xlsx {
+		position: relative;
+	}
+}
+
+.page_actions {
+	margin:30px 40px 0;
+	position: relative;
+}
